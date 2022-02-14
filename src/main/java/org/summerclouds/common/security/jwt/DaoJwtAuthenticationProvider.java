@@ -30,6 +30,11 @@ public class DaoJwtAuthenticationProvider extends AbstractJwtAuthenticationProvi
 
 	private UserDetailsService userDetailsService;
 
+	public DaoJwtAuthenticationProvider(UserDetailsService userDetailsService) {
+		this();
+		this.userDetailsService = userDetailsService;
+	}
+	
 	public DaoJwtAuthenticationProvider() {
 		setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 	}
