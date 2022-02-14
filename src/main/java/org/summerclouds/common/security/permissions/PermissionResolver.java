@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.sommerclouds.common.security.permissions;
+package org.summerclouds.common.security.permissions;
 
 /**
  * A {@code PermissionResolver} resolves a String value and converts it into a

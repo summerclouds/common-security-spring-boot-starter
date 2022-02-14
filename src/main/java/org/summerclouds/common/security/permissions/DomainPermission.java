@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.sommerclouds.common.security.permissions;
+package org.summerclouds.common.security.permissions;
 
 import java.util.Set;
 
-import org.sommerclouds.common.security.util.StringUtils;
+import org.summerclouds.common.security.util.StringUtils;
 
 /**
  * Provides a base Permission class from which type-safe/domain-specific subclasses may extend.  Can be used

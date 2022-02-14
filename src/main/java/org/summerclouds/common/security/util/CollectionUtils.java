@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.sommerclouds.common.security.util;
+package org.summerclouds.common.security.util;
 
 import java.util.Arrays;
 import java.util.Collection;

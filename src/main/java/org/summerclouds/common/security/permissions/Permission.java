@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.sommerclouds.common.security.permissions;
+package org.summerclouds.common.security.permissions;
 
 /**
  * A Permission represents the ability to perform an action or access a resource.  A Permission is the most

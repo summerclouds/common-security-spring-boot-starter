@@ -1,4 +1,4 @@
-package org.sommerclouds.common.security;
+package org.summerclouds.common.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

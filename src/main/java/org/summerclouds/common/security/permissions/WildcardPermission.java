@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.sommerclouds.common.security.permissions;
+package org.summerclouds.common.security.permissions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.sommerclouds.common.security.util.CollectionUtils;
-import org.sommerclouds.common.security.util.StringUtils;
+import org.summerclouds.common.security.util.CollectionUtils;
+import org.summerclouds.common.security.util.StringUtils;
 
 /**
  * A <code>WildcardPermission</code> is a very flexible permission construct supporting multiple levels of
