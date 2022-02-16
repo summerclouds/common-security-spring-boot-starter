@@ -1,21 +1,34 @@
 package org.summerclouds.common.security.permissions;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.summerclouds.common.core.tool.MString;
 import org.summerclouds.common.core.tool.MSystem;
 
-public class Acl implements PermissionSet {
+public class Acl implements PermissionSet, Iterable<WildcardAce> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String PERMISSION_DIVIDER = ";";
 	private boolean fullWildcard = false;
-	private List<WildcadAce> permissions = new ArrayList<>();
+	private Set<WildcardAce> permissions = new TreeSet<>(new Comparator<WildcardAce>() {
+
+		@Override
+		public int compare(WildcardAce o1, WildcardAce o2) {
+			int ret = o1.getObject().compareTo(o2.getObject());
+			if (ret != 0) return ret;
+			ret = o1.getActions().compareTo(o2.getActions());
+			if (ret != 0) return ret;
+			ret = o1.getInstances().compareTo(o2.getInstances());
+			return ret;
+		}
+	});
 	private Map<String,Actions> objects = new HashMap<>();
 
 	public Acl() {}
@@ -24,12 +37,20 @@ public class Acl implements PermissionSet {
 		for (String perm : permissions)
 			for (String perm2 : perm.split(PERMISSION_DIVIDER))
 				if (MString.isSetTrim(perm2))
-					add(new WildcadAce(perm2));
+					add(new WildcardAce(perm2));
 	}
 	
-	public void add(WildcadAce perm) {
+	public Acl(Collection<String> permissions) {
+		for (String perm : permissions)
+			for (String perm2 : perm.split(PERMISSION_DIVIDER))
+				if (MString.isSetTrim(perm2))
+					add(new WildcardAce(perm2));
+	}
+	
+	protected void add(WildcardAce perm) {
 		
-		permissions.add(perm);
+		if (!permissions.add(perm))
+			return; // already added - maybe with different comment
 		
 		if (fullWildcard) return;
 		
@@ -69,11 +90,11 @@ public class Acl implements PermissionSet {
 		
 		if (fullWildcard) return true;
 		
-		if (!testify.getObject().equals(WildcadAce.WILDCARD_TOKEN)) {
+		if (!testify.getObject().equals(WildcardAce.WILDCARD_TOKEN)) {
 			Actions actions = objects.get(testify.getObject());
-			if (actions.hasPermission(testify))
+			if (actions != null && actions.hasPermission(testify))
 				return true;
-			actions = objects.get(WildcadAce.WILDCARD_TOKEN);
+			actions = objects.get(WildcardAce.WILDCARD_TOKEN);
 			if (actions != null) 
 				return actions.hasPermission(testify);
 		} else {
@@ -89,7 +110,7 @@ public class Acl implements PermissionSet {
 		return actionMap.get(action);
 	}
 
-	protected boolean isFullWildcard() {
+	public boolean isFullWildcard() {
 		return fullWildcard;
 	}
 
@@ -115,7 +136,7 @@ public class Acl implements PermissionSet {
 			if (wildcard != null)
 				if (wildcard.hasPermission(perm)) return true;
 			
-			if (!action.equals(WildcadAce.WILDCARD_TOKEN)) {
+			if (!action.equals(WildcardAce.WILDCARD_TOKEN)) {
 				Instances res = entries.get(action);
 				if (res != null && res.hasPermission(perm)) return true;
 				for (Map.Entry<String, Instances> value : wildcards.entrySet())
@@ -137,13 +158,13 @@ public class Acl implements PermissionSet {
 
 		public void put(String action, Instances instances) {
 			entries.put(action, instances);
-			if (action.equals(WildcadAce.WILDCARD_TOKEN)) {
+			if (action.equals(WildcardAce.WILDCARD_TOKEN)) {
 				if (wildcard == null)
 					wildcard = instances;
 				return;
 			}
-			if (action.endsWith(WildcadAce.WILDCARD_TOKEN) && action.length() > WildcadAce.WILDCARD_TOKEN.length()) {
-				wildcards.put(action.substring(0,action.length()-WildcadAce.WILDCARD_TOKEN.length()), instances);
+			if (action.endsWith(WildcardAce.WILDCARD_TOKEN) && action.length() > WildcardAce.WILDCARD_TOKEN.length()) {
+				wildcards.put(action.substring(0,action.length()-WildcardAce.WILDCARD_TOKEN.length()), instances);
 			}
 		}
 		
@@ -157,19 +178,19 @@ public class Acl implements PermissionSet {
 		
 		public void add(String instance) {
 			entries.add(instance);
-			if (instance.equals(WildcadAce.WILDCARD_TOKEN)) {
+			if (instance.equals(WildcardAce.WILDCARD_TOKEN)) {
 				wildcard = true;
 				return;
 			}
-			if (instance.endsWith(WildcadAce.WILDCARD_TOKEN) && instance.length() > WildcadAce.WILDCARD_TOKEN.length()) {
-				wildcards.add(instance.substring(0,instance.length()-WildcadAce.WILDCARD_TOKEN.length()));
+			if (instance.endsWith(WildcardAce.WILDCARD_TOKEN) && instance.length() > WildcardAce.WILDCARD_TOKEN.length()) {
+				wildcards.add(instance.substring(0,instance.length()-WildcardAce.WILDCARD_TOKEN.length()));
 			}
 		}
 
 		public boolean hasPermission(Ace perm) {
 			String instance = perm.getInstance();
 			if (instance == null) return false;
-			if (instance.equals(WildcadAce.WILDCARD_TOKEN) && entries.size() > 0) return true;
+			if (instance.equals(WildcardAce.WILDCARD_TOKEN) && entries.size() > 0) return true;
 			if (wildcard || entries.contains(instance)) return true;
 			for (String value : wildcards)
 				if (instance.startsWith(value))
@@ -177,5 +198,10 @@ public class Acl implements PermissionSet {
 			return false;
 		}
 		
+	}
+
+	@Override
+	public Iterator<WildcardAce> iterator() {
+		return permissions.iterator();
 	}
 }

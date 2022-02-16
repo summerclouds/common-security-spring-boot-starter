@@ -15,14 +15,14 @@ public class Ace {
 	private String description = "";
 
 	public Ace(String object, String action, String instance) {
-		this.object = object == null ? WildcadAce.WILDCARD_TOKEN : normalize(object);
-		this.action = action == null ? WildcadAce.WILDCARD_TOKEN : normalize(action);
-		this.instance = instance == null ? WildcadAce.WILDCARD_TOKEN : normalize(instance);
+		this.object = object == null ? WildcardAce.WILDCARD_TOKEN : normalize(object);
+		this.action = action == null ? WildcardAce.WILDCARD_TOKEN : normalize(action);
+		this.instance = instance == null ? WildcardAce.WILDCARD_TOKEN : normalize(instance);
 	}
 
 	public Ace(String perm) {
 		
-		String[] parts = perm.split(WildcadAce.PART_DIVIDER_TOKEN, 4);
+		String[] parts = perm.split(WildcardAce.PART_DIVIDER_TOKEN, 4);
 		String object = null;
 		String action = null;
 		String instance = null;
@@ -38,15 +38,15 @@ public class Ace {
 			}
 		}
 			
-		this.object = object == null ? WildcadAce.WILDCARD_TOKEN : normalize(object);
-		this.action = action == null ? WildcadAce.WILDCARD_TOKEN : normalize(action);
-		this.instance = instance == null ? WildcadAce.WILDCARD_TOKEN : normalize(instance);
+		this.object = object == null ? WildcardAce.WILDCARD_TOKEN : normalize(object);
+		this.action = action == null ? WildcardAce.WILDCARD_TOKEN : normalize(action);
+		this.instance = instance == null ? WildcardAce.WILDCARD_TOKEN : normalize(instance);
 		
 	}
 	
 	private String normalize(String str) {
-		if (str.indexOf(WildcadAce.PART_DIVIDER_TOKEN) > -1)
-			str = str.replace(WildcadAce.PART_DIVIDER_TOKEN, "_");
+		if (str.indexOf(WildcardAce.PART_DIVIDER_TOKEN) > -1)
+			str = str.replace(WildcardAce.PART_DIVIDER_TOKEN, "_");
 		str = str.trim().toLowerCase();
 		return str;
 	}
@@ -64,7 +64,7 @@ public class Ace {
 	}	
 	
 	public String toString() {
-		return object + WildcadAce.PART_DIVIDER_TOKEN + action + WildcadAce.PART_DIVIDER_TOKEN + instance + WildcadAce.PART_DIVIDER_TOKEN + description;
+		return object + WildcardAce.PART_DIVIDER_TOKEN + action + WildcardAce.PART_DIVIDER_TOKEN + instance + WildcardAce.PART_DIVIDER_TOKEN + description;
 	}
 	
 }

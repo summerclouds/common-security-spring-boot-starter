@@ -4,9 +4,10 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.summerclouds.common.core.tool.MCollection;
 import org.summerclouds.common.core.tool.MString;
 
-public class AcePartSet implements Iterable<String> {
+public class AcePartSet implements Iterable<String>, Comparable<AcePartSet> {
 
     private boolean wildcard = false;
     private Set<String> content = new TreeSet<>();
@@ -14,25 +15,25 @@ public class AcePartSet implements Iterable<String> {
     public AcePartSet(boolean wildcard) {
     	this.wildcard = wildcard;
     	if (wildcard)
-    		this.content.add(WildcadAce.WILDCARD_TOKEN);
+    		this.content.add(WildcardAce.WILDCARD_TOKEN);
     }
 	
     public AcePartSet(String content) {
     	content = content.trim();
-    	if (content.equals( WildcadAce.WILDCARD_TOKEN)) {
+    	if (content.equals( WildcardAce.WILDCARD_TOKEN)) {
     		wildcard = true;
-    		this.content.add(WildcadAce.WILDCARD_TOKEN);
+    		this.content.add(WildcardAce.WILDCARD_TOKEN);
     		return;
     	}
     	
-    	String[] parts = content.split(WildcadAce.SUBPART_DIVIDER_TOKEN);
+    	String[] parts = content.split(WildcardAce.SUBPART_DIVIDER_TOKEN);
     	for (String part : parts) {
     		part = part.trim();
     		if (part.length() > 0) {
-    			if (part.equals(WildcadAce.WILDCARD_TOKEN)) {
+    			if (part.equals(WildcardAce.WILDCARD_TOKEN)) {
     				wildcard = true;
     				this.content.clear();
-    				this.content.add(WildcadAce.WILDCARD_TOKEN);
+    				this.content.add(WildcardAce.WILDCARD_TOKEN);
     				return;
     			}
     			this.content.add(part);
@@ -55,7 +56,12 @@ public class AcePartSet implements Iterable<String> {
 	}
 
 	public String toString() {
-		return MString.join(iterator(), WildcadAce.SUBPART_DIVIDER_TOKEN);
+		return MString.join(iterator(), WildcardAce.SUBPART_DIVIDER_TOKEN);
+	}
+
+	@Override
+	public int compareTo(AcePartSet o) {
+		return MCollection.compare(this.content, o.content);
 	}
 
 }

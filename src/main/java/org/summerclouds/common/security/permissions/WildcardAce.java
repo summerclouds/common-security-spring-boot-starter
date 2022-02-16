@@ -23,7 +23,7 @@ import java.io.Serializable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
-public class WildcadAce implements GrantedAuthority, Serializable {
+public class WildcardAce implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class WildcadAce implements GrantedAuthority, Serializable {
 
 	private String description = "";
     
-    public WildcadAce(String wildcardString) {
+    public WildcardAce(String wildcardString) {
     	Assert.notNull(wildcardString, "wildcard string can't be null");
     	// parse
     	wildcardString = wildcardString.trim().toLowerCase();
@@ -76,7 +76,7 @@ public class WildcadAce implements GrantedAuthority, Serializable {
     	
     	instances = new AcePartSet(parts[2]);
     	
-    	if (parts.length < 4) {
+    	if (parts.length > 3) {
     		description  = parts[3];
     	}
     	

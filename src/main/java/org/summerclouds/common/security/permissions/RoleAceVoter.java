@@ -11,7 +11,7 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 
 	private String rolePrefixUpper = "ROLE_";
 	private String rolePrefixLower = "role_";
-	private String rolePermission = "role:access:";
+	public static final String ROLE_PERMISSION = "role"+WildcardAce.PART_DIVIDER_TOKEN+"access" + WildcardAce.PART_DIVIDER_TOKEN;
 	private boolean legacy = true;
 
 	public String getRolePrefix() {
@@ -67,7 +67,7 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 		Collection<? extends GrantedAuthority> authorities = extractAuthorities(authentication);
 		for (ConfigAttribute attribute : attributes) {
 			if (this.supports(attribute)) {
-				String roleAsPermission = rolePermission + toString(attribute);
+				String roleAsPermission = ROLE_PERMISSION + toString(attribute);
 				result = ACCESS_DENIED;
 				// Attempt to find a matching granted authority
 				for (GrantedAuthority authority : authorities) {
