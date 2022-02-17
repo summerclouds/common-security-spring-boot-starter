@@ -80,7 +80,7 @@ public abstract class AbstractUserRealm implements UserRealm {
 	}
 
 	protected String createRoleAccessEntry(String rolename) {
-		return RoleAceVoter.ROLE_PERMISSION + rolename;
+		return RoleAceVoter.ROLE_ACE + rolename;
 	}
 
 	protected abstract User createUser(String username, Acl acl);

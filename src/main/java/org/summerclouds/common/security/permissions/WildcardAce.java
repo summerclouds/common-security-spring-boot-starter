@@ -27,10 +27,6 @@ public class WildcardAce implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-    protected static final String WILDCARD_TOKEN = "*";
-    protected static final String PART_DIVIDER_TOKEN = ":";
-    protected static final String SUBPART_DIVIDER_TOKEN = ",";
-
     private String object; 
     private boolean fullWildcard = false;
     private boolean wildcard = false;
@@ -46,8 +42,8 @@ public class WildcardAce implements GrantedAuthority, Serializable {
     	// parse
     	wildcardString = wildcardString.trim().toLowerCase();
     	Assert.hasText(wildcardString, "wildcard string must be set");
-    	if (wildcardString.equals(WILDCARD_TOKEN)) {
-    		object = WILDCARD_TOKEN;
+    	if (wildcardString.equals(Ace.WILDCARD_TOKEN)) {
+    		object = Ace.WILDCARD_TOKEN;
     		actions = new AcePartSet(true);
     		instances = new AcePartSet(true);
     		fullWildcard = true;
@@ -55,11 +51,11 @@ public class WildcardAce implements GrantedAuthority, Serializable {
     		return;
     	}
     	
-    	String[] parts = wildcardString.split(PART_DIVIDER_TOKEN,4);
+    	String[] parts = wildcardString.split(Ace.PART_DIVIDER_TOKEN,4);
     	Assert.isTrue(parts.length > 0, "minimum object name"); // paranoia
     	
     	object = parts[0].trim();
-    	wildcard = object.equals(WILDCARD_TOKEN);
+    	wildcard = object.equals(Ace.WILDCARD_TOKEN);
     	
     	if (parts.length < 2) {
     		actions = new AcePartSet(true);
@@ -117,8 +113,8 @@ public class WildcardAce implements GrantedAuthority, Serializable {
 	
 	public String toString() {
 		if (isFullWildcard())
-			return WILDCARD_TOKEN;
-		return object + PART_DIVIDER_TOKEN + actions + PART_DIVIDER_TOKEN + instances + PART_DIVIDER_TOKEN + description;
+			return Ace.WILDCARD_TOKEN;
+		return object + Ace.PART_DIVIDER_TOKEN + actions + Ace.PART_DIVIDER_TOKEN + instances + Ace.PART_DIVIDER_TOKEN + description;
 	}
 
 }

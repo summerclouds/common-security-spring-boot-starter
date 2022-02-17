@@ -15,25 +15,25 @@ public class AcePartSet implements Iterable<String>, Comparable<AcePartSet> {
     public AcePartSet(boolean wildcard) {
     	this.wildcard = wildcard;
     	if (wildcard)
-    		this.content.add(WildcardAce.WILDCARD_TOKEN);
+    		this.content.add(Ace.WILDCARD_TOKEN);
     }
 	
     public AcePartSet(String content) {
     	content = content.trim();
-    	if (content.equals( WildcardAce.WILDCARD_TOKEN)) {
+    	if (content.equals( Ace.WILDCARD_TOKEN)) {
     		wildcard = true;
-    		this.content.add(WildcardAce.WILDCARD_TOKEN);
+    		this.content.add(Ace.WILDCARD_TOKEN);
     		return;
     	}
     	
-    	String[] parts = content.split(WildcardAce.SUBPART_DIVIDER_TOKEN);
+    	String[] parts = content.split(Ace.SUBPART_DIVIDER_TOKEN);
     	for (String part : parts) {
     		part = part.trim();
     		if (part.length() > 0) {
-    			if (part.equals(WildcardAce.WILDCARD_TOKEN)) {
+    			if (part.equals(Ace.WILDCARD_TOKEN)) {
     				wildcard = true;
     				this.content.clear();
-    				this.content.add(WildcardAce.WILDCARD_TOKEN);
+    				this.content.add(Ace.WILDCARD_TOKEN);
     				return;
     			}
     			this.content.add(part);
@@ -56,7 +56,7 @@ public class AcePartSet implements Iterable<String>, Comparable<AcePartSet> {
 	}
 
 	public String toString() {
-		return MString.join(iterator(), WildcardAce.SUBPART_DIVIDER_TOKEN);
+		return MString.join(iterator(), Ace.SUBPART_DIVIDER_TOKEN);
 	}
 
 	@Override

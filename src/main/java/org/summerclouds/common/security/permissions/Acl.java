@@ -90,11 +90,11 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 		
 		if (fullWildcard) return true;
 		
-		if (!testify.getObject().equals(WildcardAce.WILDCARD_TOKEN)) {
+		if (!testify.getObject().equals(Ace.WILDCARD_TOKEN)) {
 			Actions actions = objects.get(testify.getObject());
 			if (actions != null && actions.hasPermission(testify))
 				return true;
-			actions = objects.get(WildcardAce.WILDCARD_TOKEN);
+			actions = objects.get(Ace.WILDCARD_TOKEN);
 			if (actions != null) 
 				return actions.hasPermission(testify);
 		} else {
@@ -136,7 +136,7 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 			if (wildcard != null)
 				if (wildcard.hasPermission(perm)) return true;
 			
-			if (!action.equals(WildcardAce.WILDCARD_TOKEN)) {
+			if (!action.equals(Ace.WILDCARD_TOKEN)) {
 				Instances res = entries.get(action);
 				if (res != null && res.hasPermission(perm)) return true;
 				for (Map.Entry<String, Instances> value : wildcards.entrySet())
@@ -158,13 +158,13 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 
 		public void put(String action, Instances instances) {
 			entries.put(action, instances);
-			if (action.equals(WildcardAce.WILDCARD_TOKEN)) {
+			if (action.equals(Ace.WILDCARD_TOKEN)) {
 				if (wildcard == null)
 					wildcard = instances;
 				return;
 			}
-			if (action.endsWith(WildcardAce.WILDCARD_TOKEN) && action.length() > WildcardAce.WILDCARD_TOKEN.length()) {
-				wildcards.put(action.substring(0,action.length()-WildcardAce.WILDCARD_TOKEN.length()), instances);
+			if (action.endsWith(Ace.WILDCARD_TOKEN) && action.length() > Ace.WILDCARD_TOKEN.length()) {
+				wildcards.put(action.substring(0,action.length()-Ace.WILDCARD_TOKEN.length()), instances);
 			}
 		}
 		
@@ -183,19 +183,19 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 		
 		public void add(String instance) {
 			entries.add(instance);
-			if (instance.equals(WildcardAce.WILDCARD_TOKEN)) {
+			if (instance.equals(Ace.WILDCARD_TOKEN)) {
 				wildcard = true;
 				return;
 			}
-			if (instance.endsWith(WildcardAce.WILDCARD_TOKEN) && instance.length() > WildcardAce.WILDCARD_TOKEN.length()) {
-				wildcards.add(instance.substring(0,instance.length()-WildcardAce.WILDCARD_TOKEN.length()));
+			if (instance.endsWith(Ace.WILDCARD_TOKEN) && instance.length() > Ace.WILDCARD_TOKEN.length()) {
+				wildcards.add(instance.substring(0,instance.length()-Ace.WILDCARD_TOKEN.length()));
 			}
 		}
 
 		public boolean hasPermission(Ace perm) {
 			String instance = perm.getInstance();
 			if (instance == null) return false;
-			if (instance.equals(WildcardAce.WILDCARD_TOKEN) && entries.size() > 0) return true;
+			if (instance.equals(Ace.WILDCARD_TOKEN) && entries.size() > 0) return true;
 			if (wildcard || entries.contains(instance)) return true;
 			for (String value : wildcards)
 				if (instance.startsWith(value))

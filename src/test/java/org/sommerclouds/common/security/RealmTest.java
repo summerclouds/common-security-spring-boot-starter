@@ -22,10 +22,10 @@ import org.summerclounds.common.junit.TestCase;
 
 @SpringBootTest(classes = {
 		RealmManager.class, 
-		TestRealmConfiguration.class, 
+		RealmTestConfiguration.class, 
 		SpringSummerCloudsCoreAutoConfiguration.class,
 		SpringSummerCloudsSecurityAutoConfiguration.class})
-public class TestRealm extends TestCase {
+public class RealmTest extends TestCase {
 
 	@Autowired
 	RealmManager manager;

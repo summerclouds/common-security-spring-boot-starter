@@ -12,7 +12,7 @@ import org.summerclouds.common.security.permissions.Acl;
 import org.summerclouds.common.security.permissions.WildcardAce;
 import org.summerclounds.common.junit.TestCase;
 
-public class TestAcl extends TestCase {
+public class AclTest extends TestCase {
 
 	@Test
 	public void testDouble() {

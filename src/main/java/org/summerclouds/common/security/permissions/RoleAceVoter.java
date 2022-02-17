@@ -9,9 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class RoleAceVoter implements AccessDecisionVoter<Object> {
 
+	public static final String ROLE_PREFIX = "ROLE_";
+	
 	private String rolePrefixUpper = "ROLE_";
 	private String rolePrefixLower = "role_";
-	public static final String ROLE_PERMISSION = "role"+WildcardAce.PART_DIVIDER_TOKEN+"access" + WildcardAce.PART_DIVIDER_TOKEN;
+	public static final String ROLE_ACE = "role"+Ace.PART_DIVIDER_TOKEN+"access" + Ace.PART_DIVIDER_TOKEN;
 	private boolean legacy = true;
 
 	public String getRolePrefix() {
@@ -67,7 +69,8 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 		Collection<? extends GrantedAuthority> authorities = extractAuthorities(authentication);
 		for (ConfigAttribute attribute : attributes) {
 			if (this.supports(attribute)) {
-				String roleAsPermission = ROLE_PERMISSION + toString(attribute);
+				String rolename = toString(attribute).substring(rolePrefixUpper.length()).toLowerCase();
+				String roleAsPermission = ROLE_ACE + rolename;
 				result = ACCESS_DENIED;
 				// Attempt to find a matching granted authority
 				for (GrantedAuthority authority : authorities) {
@@ -75,7 +78,7 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 							((PermissionSet)authority).hasPermission(roleAsPermission) )
 							return ACCESS_GRANTED;
 					else
-					if (legacy && attribute.getAttribute().equals(authority.getAuthority())) {
+					if (legacy && rolename.equalsIgnoreCase(authority.getAuthority())) {
 						return ACCESS_GRANTED;
 					}
 				}

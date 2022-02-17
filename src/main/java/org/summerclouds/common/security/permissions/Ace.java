@@ -6,6 +6,19 @@ package org.summerclouds.common.security.permissions;
  */
 public class Ace {
 
+    // default rights
+    public static final String READ = "read";
+    public static final String CREATE = "create";
+    public static final String UPDATE = "update";
+    public static final String DELETE = "delete";
+    public static final String VIEW = "view";
+    public static final String ADMIN = "admin";
+    public static final String EXECUTE = "execute";
+
+    public static final String WILDCARD_TOKEN = "*";
+    public static final String PART_DIVIDER_TOKEN = ":";
+    public static final String SUBPART_DIVIDER_TOKEN = ",";
+
 	private String object;
 	
 	private String action;
@@ -15,14 +28,14 @@ public class Ace {
 	private String description = "";
 
 	public Ace(String object, String action, String instance) {
-		this.object = object == null ? WildcardAce.WILDCARD_TOKEN : normalize(object);
-		this.action = action == null ? WildcardAce.WILDCARD_TOKEN : normalize(action);
-		this.instance = instance == null ? WildcardAce.WILDCARD_TOKEN : normalize(instance);
+		this.object = object == null ? WILDCARD_TOKEN : normalize(object);
+		this.action = action == null ? WILDCARD_TOKEN : normalize(action);
+		this.instance = instance == null ? WILDCARD_TOKEN : normalize(instance);
 	}
 
 	public Ace(String perm) {
 		
-		String[] parts = perm.split(WildcardAce.PART_DIVIDER_TOKEN, 4);
+		String[] parts = perm.split(PART_DIVIDER_TOKEN, 4);
 		String object = null;
 		String action = null;
 		String instance = null;
@@ -38,15 +51,15 @@ public class Ace {
 			}
 		}
 			
-		this.object = object == null ? WildcardAce.WILDCARD_TOKEN : normalize(object);
-		this.action = action == null ? WildcardAce.WILDCARD_TOKEN : normalize(action);
-		this.instance = instance == null ? WildcardAce.WILDCARD_TOKEN : normalize(instance);
+		this.object = object == null ? WILDCARD_TOKEN : normalize(object);
+		this.action = action == null ? WILDCARD_TOKEN : normalize(action);
+		this.instance = instance == null ? WILDCARD_TOKEN : normalize(instance);
 		
 	}
 	
-	private String normalize(String str) {
-		if (str.indexOf(WildcardAce.PART_DIVIDER_TOKEN) > -1)
-			str = str.replace(WildcardAce.PART_DIVIDER_TOKEN, "_");
+	public static String normalize(String str) {
+		if (str.indexOf(PART_DIVIDER_TOKEN) > -1)
+			str = str.replace(PART_DIVIDER_TOKEN, "_");
 		str = str.trim().toLowerCase();
 		return str;
 	}
@@ -64,7 +77,11 @@ public class Ace {
 	}	
 	
 	public String toString() {
-		return object + WildcardAce.PART_DIVIDER_TOKEN + action + WildcardAce.PART_DIVIDER_TOKEN + instance + WildcardAce.PART_DIVIDER_TOKEN + description;
+		return object + PART_DIVIDER_TOKEN + action + PART_DIVIDER_TOKEN + instance + PART_DIVIDER_TOKEN + description;
+	}
+
+	public static String normalize(String object, String action, String instance) {
+		return normalize(object) + PART_DIVIDER_TOKEN + normalize(action) + PART_DIVIDER_TOKEN + normalize(instance);
 	}
 	
 }
