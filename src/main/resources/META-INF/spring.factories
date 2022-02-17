@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.summerclouds.common.security.internal.SpringSummerCloudsAutoConfiguration
+org.summerclouds.common.security.internal.SpringSummerCloudsSecurityAutoConfiguration

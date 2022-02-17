@@ -168,6 +168,11 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 			}
 		}
 		
+		@Override
+		public String toString() {
+			return MSystem.toString(this, entries);
+		}
+		
 	}
 	
 	private class Instances {
@@ -196,6 +201,11 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 				if (instance.startsWith(value))
 					return true;
 			return false;
+		}
+		
+		@Override
+		public String toString() {
+			return MSystem.toString(this, entries);
 		}
 		
 	}

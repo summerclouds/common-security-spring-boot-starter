@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.summerclouds.common.core.tool.MCollection;
 import org.summerclouds.common.security.permissions.Acl;
 import org.summerclouds.common.security.permissions.WildcardAce;
+import org.summerclounds.common.junit.TestCase;
 
-public class TestAcl {
+public class TestAcl extends TestCase {
 
 	@Test
 	public void testDouble() {

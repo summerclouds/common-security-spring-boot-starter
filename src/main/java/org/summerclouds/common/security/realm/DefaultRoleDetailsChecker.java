@@ -4,8 +4,12 @@ public class DefaultRoleDetailsChecker implements RoleDetailsChecker {
 
 	@Override
 	public boolean check(Role role) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		if (!role.isEnabled()) return false;
+		
+		if (!role.isAccountNonLocked()) return false;
+		
+		return true;
 	}
 
 }
