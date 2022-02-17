@@ -25,7 +25,7 @@ public class MemoryUserRolesRealm implements UserRoleRealm {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return !roles.isEmpty();
 	}
 
 }

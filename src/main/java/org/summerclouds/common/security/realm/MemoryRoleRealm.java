@@ -37,4 +37,9 @@ public class MemoryRoleRealm implements RoleRealm {
 		roles.add(name);
 		return this;
 	}
+
+	@Override
+	public boolean isEnabled() {
+		return !roles.isEmpty();
+	}
 }

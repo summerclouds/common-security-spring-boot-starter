@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.summerclouds.common.core.log.MLog;
 import org.summerclouds.common.core.tool.MSpring;
 import org.summerclouds.common.security.permissions.Acl;
@@ -19,11 +21,13 @@ public class RealmManager extends MLog implements UserDetailsService {
 	protected synchronized void loadRealms() {
 		if (realms != null) return;
 		realms = MSpring.getBeansOfType(Realm.class);
-		log().i("load realms",realms);
+		log().d("loaded realms",realms);
 	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Assert.hasText(username,"Usernam can't be empty");
+		username = RealmUtil.normalize(username);
 		loadRealms();
 		if (realms == null) return null;
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
@@ -39,10 +43,12 @@ public class RealmManager extends MLog implements UserDetailsService {
 				log().w("can't load user from realm {1}", realm.getKey(), t);
 			}
 		}
-		return null;
+		throw new UsernameNotFoundException("user not found " + username);
 	}
 	
 	public Acl loadAclForUsername(String username) {
+		if (!StringUtils.hasText(username)) return null;
+		username = RealmUtil.normalize(username);
 		loadRealms();
 		if (realms == null) return null;
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
@@ -62,6 +68,8 @@ public class RealmManager extends MLog implements UserDetailsService {
 	}
 	
 	public Role loadRoleByRolename(String rolename) {
+		if (!StringUtils.hasText(rolename)) return null;
+		rolename = RealmUtil.normalize(rolename);
 		loadRealms();
 		if (realms == null) return null;
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
@@ -81,6 +89,8 @@ public class RealmManager extends MLog implements UserDetailsService {
 	}
 	
 	public Acl loadAclForRole(String rolename) {
+		if (!StringUtils.hasText(rolename)) return null;
+		rolename = RealmUtil.normalize(rolename);
 		loadRealms();
 		if (realms == null) return null;
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
@@ -100,6 +110,8 @@ public class RealmManager extends MLog implements UserDetailsService {
 	}
 
 	public Set<String> loadRolesByUsername(String username) {
+		if (!StringUtils.hasText(username)) return null;
+		username = RealmUtil.normalize(username);
 		loadRealms();
 		if (realms == null) return null;
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
