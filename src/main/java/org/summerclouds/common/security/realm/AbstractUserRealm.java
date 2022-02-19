@@ -1,16 +1,18 @@
 package org.summerclouds.common.security.realm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.Assert;
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 import org.summerclouds.common.security.permissions.RoleAceVoter;
-import org.summerclouds.common.security.permissions.WildcardAce;
+import org.summerclouds.common.security.permissions.Perm;
 
 public abstract class AbstractUserRealm implements UserRealm {
 	
@@ -31,11 +33,11 @@ public abstract class AbstractUserRealm implements UserRealm {
 	public User getUser(String username) {
 		Assert.notNull(manager, "User manager not found");
 		
-		List<Acl> acls = new ArrayList<>();
+		List<PermSet> acls = new ArrayList<>();
 		Set<String> additionalAccess = new HashSet<>();
 		
 		// load user acls
-		Acl userAcl = manager.loadAclForUsername(username);
+		PermSet userAcl = manager.loadAclForUsername(username);
 		if (userAcl != null)
 			acls.add(userAcl);
 		// load role acls
@@ -47,7 +49,7 @@ public abstract class AbstractUserRealm implements UserRealm {
 				Role role = manager.loadRoleByRolename(rolename);
 				if (role != null) {
 					if (roleDetailsChecker.check(role)) {
-						Acl roleAcl = manager.loadAclForRole(rolename);
+						PermSet roleAcl = manager.loadAclForRole(rolename);
 						if (roleAcl != null)
 							acls.add(roleAcl);
 						
@@ -63,26 +65,29 @@ public abstract class AbstractUserRealm implements UserRealm {
 				}
 			}
 			if (!roleAccess.isEmpty())
-				acls.add(new Acl(roleAccess));
+				acls.add(new PermSet(roleAccess));
 		}
 		
 		// join acls
-		Acl newAcl = null;
+		PermSet newAcl = null;
 		Set<String> newAces = new HashSet<>();
-		for (Acl acl : acls) {
-			for (WildcardAce ace : acl) {
+		for (PermSet acl : acls) {
+			for (Perm ace : acl) {
 				newAces.add( ace.toString() );
 			}
 		}
-		newAcl = new Acl(newAces);
+		newAcl = new PermSet(newAces);
 		
-		return createUser(username, newAcl);
+		Map<String, String> data = new HashMap<>();
+		manager.loadUserData(username, data);
+		
+		return createUser(username, newAcl, data);
 	}
 
 	protected String createRoleAccessEntry(String rolename) {
 		return RoleAceVoter.ROLE_ACE + rolename;
 	}
 
-	protected abstract User createUser(String username, Acl acl);
+	protected abstract User createUser(String username, PermSet acl, Map<String, String> data);
 
 }

@@ -2,12 +2,13 @@ package org.summerclouds.common.security.realm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 
 public class MemoryUserRealm extends AbstractUserRealm {
 
@@ -22,12 +23,12 @@ public class MemoryUserRealm extends AbstractUserRealm {
 	}
 
 	@Override
-	protected User createUser(String username, Acl acl) {
+	protected User createUser(String username, PermSet acl, Map<String, String> data) {
 		String password = users.get(username);
 		if (password == null) return null;
 		ArrayList<GrantedAuthority> list = new ArrayList<>(1);
 		list.add(acl);
-		return new User(username, encoder.encode(password), list);
+		return new DataUser(username, encoder.encode(password), list, data);
 	}
 
 	public MemoryUserRealm add(String name, String password) {

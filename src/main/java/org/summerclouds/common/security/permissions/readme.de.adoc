@@ -1,0 +1,139 @@
+//@manual
+
+== Permissions
+
+Die Implementierung adaptiert das Konzept von `apache-shiro`
+bei dem direkt Resourcen durch `access control entities (ace)`
+definiert werden.
+
+Am Benutzer (subject) werden permissions in sets definiert. Die Definitionen
+können Platzhalter beinhalten die Rechte gruppieren. Ein
+Platzhalter wird durch einen Stern `*` (wildcard) markiert.
+
+An der Resource (object) wird die ACE definiert. Mehrere Einträge
+können in einer access control list (ACL) zusammengefasst werden.
+In `spring` werden die ACLs mit meheren `authorities` umgesetzt.
+
+ACEs können auch Platzhalter enthalten. Diese stehen hier für
+Teile die bei der Rechteprüfung nicht beachtet werden sollen.
+
+In Spring werden ACE-Definitionen mit dem Prefix `ace_` bzw. 
+`ACE_` angegeben (synonym zu `ROLE_`).
+
+
+
+=== Konzept
+
+Eine Permission besteht aus `object`, `action`, `instance` und Beschreibung.
+Die Teile werden durch Doppelpunkt getrennt. Ungenutzte Teile
+können von links nach rechts weggelassen werden. Die Teile
+werden getrimmt, können also Whitespaces enthalten, die entfernt
+werden.
+
+Das `object` definiert den eindeutigen Namen des berechtigten
+Resource-Types. Dieser Teil kann nur durch den Platzhalter für alle
+Resourcen ersetzt werden. Es kann immer nur ein Name angegeben 
+werden.
+
+Ein Beispiel ist ein Drucker `printer` oder `*`.
+
+Die `action` ist eine Liste von Aktionen auf die der Benutzer
+berechtigt wird. Die Aktionen werden durch Komma getrennt.
+Aktionen können mit einem Stern komplett freigegeben werden oder
+am Ende eines Aktionsnamens einen Stern beinhalten, der alle
+weiterführenden Aktionsnamen einschließt.
+
+Beispile für Aktionen sind `print,view,admin` oder `*` oder
+`print,view,admin-*`.
+
+Die Instanz zeigt auf spezielle Instanzen der Resource.
+Instanzen können wie Aktionen aufgelistet mit einem
+Platzhalter ergänzt werden.
+
+Platzhalter können jeweils nur auf der rechten Seite angefügt
+werden. In ACEs können zudem je nach Typ der zu berechtigten
+Resource Variablen genutzt werden.
+Für Web-Resourcen können auf die beiden Variablen `method` und
+`url` zugegriffen werden.
+
+
+
+=== Beispiele
+
+Zugriff auf alle Drucker mit allen aktionen erlauben:
+
+----
+printer
+printer:*
+printer:*:*
+----
+
+Zugriff zum Drucken auf allen Druckern:
+
+----
+printer:print
+printer:print:*
+----
+
+Zugriff zum Drucken auf den Drucker office_1_room_1113:
+
+----
+printer:print:office_1_room_1113
+----
+
+Komplettzugriff auf den Drucker office_1_room_1113:
+
+----
+printer:*:office_1_room_1113
+----
+
+Komplettzugriff auf alle Drucker im Büro 1 (office_1):
+
+----
+printer:*:office_1*
+----
+
+Zugriff auf alle Resourcen mit der Aktion Drucken:
+
+----
+*:print
+*:print:*
+----
+
+Zugriff auf alles:
+
+----
+*
+*:*
+*:*:*
+----
+
+Die Definition auf einer Web-Resource:
+
+----
+ace_web:${method}:${url}
+----
+
+Zugriff auf die Web-Resource:
+
+----
+web:get:/secure  :Access to /secure with methode GET
+web:*  :/secure  :Access to /secure with all methods
+web:*  :/secure/*:Access to all urls in /secure/
+----
+
+=== Rollen
+
+Die Erweiterung bilded auch Rollen auf Resourcen ab. Der Resource-Type
+für Rollen ist `role` und die Standart-Aktion ist `access`.
+
+Zugriff auf Rollen:
+
+----
+role:access:*   :Access all roles
+role:access:user:Access to role user
+----
+
+
+
+

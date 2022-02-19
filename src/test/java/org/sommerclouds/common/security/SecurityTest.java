@@ -25,27 +25,27 @@ public class SecurityTest extends TestCase {
 
 	@Test
 	public void testAsSubject() {
-		System.out.println(MSecurity.get().getCurrent());
-		assertNull(MSecurity.get().getCurrent());
+		System.out.println(MSecurity.getCurrent());
+		assertNull(MSecurity.getCurrent());
 		
-		try (ISubjectEnvironment sudo = MSecurity.get().asSubject("user")) {
-			System.out.println(MSecurity.get().getCurrent());
-			assertEquals("user", MSecurity.get().getCurrent().getName());
+		try (ISubjectEnvironment sudo = MSecurity.asSubject("user")) {
+			System.out.println(MSecurity.getCurrent());
+			assertEquals("user", MSecurity.getCurrent().getName());
 		}
 		
-		System.out.println(MSecurity.get().getCurrent());
-		assertNull(MSecurity.get().getCurrent());
+		System.out.println(MSecurity.getCurrent());
+		assertNull(MSecurity.getCurrent());
 	}
 	
 	@Test
 	public void testGetSubject() {
-		ISubject admin = MSecurity.get().getSubject("admin");
+		ISubject admin = MSecurity.getSubject("admin");
 		assertEquals("admin", admin.getName());
 	}
 
 	@Test
 	public void testHasAccess() {
-		try (ISubjectEnvironment sudo = MSecurity.get().asSubject("user")) {
+		try (ISubjectEnvironment sudo = MSecurity.asSubject("user")) {
 			ISecurity sec = MSecurity.get();
 			assertFalse(sec.hasPermission("a:b:c"));
 			assertFalse(sec.hasPermission("role:*:admin"));
@@ -57,7 +57,7 @@ public class SecurityTest extends TestCase {
 			assertFalse(sec.hasRole("admin"));
 		}
 		
-		try (ISubjectEnvironment sudo = MSecurity.get().asSubject("user")) {
+		try (ISubjectEnvironment sudo = MSecurity.asSubject("user")) {
 			ISubject sec = sudo.getSubject();
 			assertFalse(sec.hasPermission("a:b:c"));
 			assertFalse(sec.hasPermission("role:*:admin"));

@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.summerclouds.common.core.log.MLog;
 import org.summerclouds.common.core.tool.MSpring;
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 
 public class RealmManager extends MLog implements UserDetailsService {
 
@@ -46,7 +46,7 @@ public class RealmManager extends MLog implements UserDetailsService {
 		throw new UsernameNotFoundException("user not found " + username);
 	}
 	
-	public Acl loadAclForUsername(String username) {
+	public PermSet loadAclForUsername(String username) {
 		if (!StringUtils.hasText(username)) return null;
 		username = RealmUtil.normalize(username);
 		loadRealms();
@@ -54,7 +54,7 @@ public class RealmManager extends MLog implements UserDetailsService {
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
 			try {
 				if (realm.getValue().isEnabled() && realm.getValue() instanceof UserAclRealm) {
-					Acl acl = ((UserAclRealm)realm.getValue()).getAclForUser(username);
+					PermSet acl = ((UserAclRealm)realm.getValue()).getAclForUser(username);
 					if (acl != null) {
 						log().d("load acl for user {1} from realm {2}",username,realm.getKey());
 						return acl;
@@ -88,7 +88,7 @@ public class RealmManager extends MLog implements UserDetailsService {
 		return null;
 	}
 	
-	public Acl loadAclForRole(String rolename) {
+	public PermSet loadAclForRole(String rolename) {
 		if (!StringUtils.hasText(rolename)) return null;
 		rolename = RealmUtil.normalize(rolename);
 		loadRealms();
@@ -96,7 +96,7 @@ public class RealmManager extends MLog implements UserDetailsService {
 		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
 			try {
 				if (realm.getValue().isEnabled() && realm.getValue() instanceof RoleAclRealm) {
-					Acl acl = ((RoleAclRealm)realm.getValue()).getAclforRole(rolename);
+					PermSet acl = ((RoleAclRealm)realm.getValue()).getAclforRole(rolename);
 					if (acl != null) {
 						log().d("load acl for role {1} from realm {2}",rolename,realm.getKey());
 						return acl;
@@ -128,6 +128,23 @@ public class RealmManager extends MLog implements UserDetailsService {
 			}
 		}
 		return null;
+	}
+
+	public void loadUserData(String username, Map<String, String> data) {
+		if (!StringUtils.hasText(username)) return;
+		username = RealmUtil.normalize(username);
+		loadRealms();
+		if (realms == null) return;
+		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
+			try {
+				if (realm.getValue().isEnabled() && realm.getValue() instanceof UserDataRealm) {
+					UserData d = ((UserDataRealm)realm).getUserData(username);
+					data.putAll( d.getUserData() );
+				}
+			} catch (Throwable t) {
+				log().w("can't load user data from realm {1}", realm.getKey(), t);
+			}
+		}
 	}
 	
 }

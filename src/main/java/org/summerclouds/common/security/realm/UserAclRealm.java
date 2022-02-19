@@ -1,6 +1,6 @@
 package org.summerclouds.common.security.realm;
 
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 
 public interface UserAclRealm extends Realm {
 
@@ -10,6 +10,6 @@ public interface UserAclRealm extends Realm {
 	 * @param username
 	 * @return
 	 */
-	Acl getAclForUser(String username);
+	PermSet getAclForUser(String username);
 
 }

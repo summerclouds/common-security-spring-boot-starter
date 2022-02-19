@@ -8,7 +8,6 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.summerclouds.common.core.security.ISubject;
-import org.summerclouds.common.core.tool.MSecurity;
 import org.summerclouds.common.core.tool.MSpring;
 import org.summerclouds.common.core.tool.MSystem;
 import org.summerclouds.common.core.util.SingleList;
@@ -67,7 +66,7 @@ public class SubjectImpl implements ISubject {
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
 		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(object,action,instance)));
 		try {
-			adm.decide(authentication, MSecurity.get(), list);
+			adm.decide(authentication, SecurityImpl.FILTER_INVOCATION, list);
 			return true;
 		} catch (AccessDeniedException e) {}
 		return false;

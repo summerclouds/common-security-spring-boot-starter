@@ -1,9 +1,9 @@
 package org.summerclouds.common.security.realm;
 
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 
 public interface RoleAclRealm extends Realm {
 
-	Acl getAclforRole(String rolename);
+	PermSet getAclforRole(String rolename);
 
 }

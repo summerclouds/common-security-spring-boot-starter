@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.summerclouds.common.core.internal.SpringSummerCloudsCoreAutoConfiguration;
 import org.summerclouds.common.security.internal.SpringSummerCloudsSecurityAutoConfiguration;
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 import org.summerclouds.common.security.realm.RealmManager;
 import org.summerclounds.common.junit.TestCase;
 
@@ -39,8 +39,8 @@ public class RealmTest extends TestCase {
 			assertNotNull(auth);
 			assertEquals(1, auth.size());
 			GrantedAuthority entry = auth.iterator().next();
-			assertTrue(entry instanceof Acl);
-			Acl acl = (Acl)entry;
+			assertTrue(entry instanceof PermSet);
+			PermSet acl = (PermSet)entry;
 			log().i("ADMIN ACL",acl);
 			assertTrue(acl.hasPermission("a:b:c"));
 		}		
@@ -51,8 +51,8 @@ public class RealmTest extends TestCase {
 			assertNotNull(auth);
 			assertEquals(1, auth.size());
 			GrantedAuthority entry = auth.iterator().next();
-			assertTrue(entry instanceof Acl);
-			Acl acl = (Acl)entry;
+			assertTrue(entry instanceof PermSet);
+			PermSet acl = (PermSet)entry;
 			log().i("USER ACL",acl);
 			assertFalse(acl.hasPermission("a:b:c"));
 			assertFalse(acl.hasPermission("role:*:admin"));

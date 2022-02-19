@@ -12,15 +12,15 @@ import java.util.TreeSet;
 import org.summerclouds.common.core.tool.MString;
 import org.summerclouds.common.core.tool.MSystem;
 
-public class Acl implements PermissionSet, Iterable<WildcardAce> {
+public class PermSet implements Iterable<Perm>, Permissions {
 
 	private static final long serialVersionUID = 1L;
 	public static final String PERMISSION_DIVIDER = ";";
 	private boolean fullWildcard = false;
-	private Set<WildcardAce> permissions = new TreeSet<>(new Comparator<WildcardAce>() {
+	private Set<Perm> permissions = new TreeSet<>(new Comparator<Perm>() {
 
 		@Override
-		public int compare(WildcardAce o1, WildcardAce o2) {
+		public int compare(Perm o1, Perm o2) {
 			int ret = o1.getObject().compareTo(o2.getObject());
 			if (ret != 0) return ret;
 			ret = o1.getActions().compareTo(o2.getActions());
@@ -31,23 +31,23 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 	});
 	private Map<String,Actions> objects = new HashMap<>();
 
-	public Acl() {}
+	public PermSet() {}
 	
-	public Acl(String ... permissions) {
+	public PermSet(String ... permissions) {
 		for (String perm : permissions)
 			for (String perm2 : perm.split(PERMISSION_DIVIDER))
 				if (MString.isSetTrim(perm2))
-					add(new WildcardAce(perm2));
+					add(new Perm(perm2));
 	}
 	
-	public Acl(Collection<String> permissions) {
+	public PermSet(Collection<String> permissions) {
 		for (String perm : permissions)
 			for (String perm2 : perm.split(PERMISSION_DIVIDER))
 				if (MString.isSetTrim(perm2))
-					add(new WildcardAce(perm2));
+					add(new Perm(perm2));
 	}
 	
-	protected void add(WildcardAce perm) {
+	protected void add(Perm perm) {
 		
 		if (!permissions.add(perm))
 			return; // already added - maybe with different comment
@@ -211,7 +211,7 @@ public class Acl implements PermissionSet, Iterable<WildcardAce> {
 	}
 
 	@Override
-	public Iterator<WildcardAce> iterator() {
+	public Iterator<Perm> iterator() {
 		return permissions.iterator();
 	}
 }

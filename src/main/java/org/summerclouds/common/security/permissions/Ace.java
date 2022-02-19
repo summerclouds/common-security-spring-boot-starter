@@ -18,6 +18,7 @@ public class Ace {
     public static final String WILDCARD_TOKEN = "*";
     public static final String PART_DIVIDER_TOKEN = ":";
     public static final String SUBPART_DIVIDER_TOKEN = ",";
+	public static final String ACE_DIVIDER = ";";
 
 	private String object;
 	

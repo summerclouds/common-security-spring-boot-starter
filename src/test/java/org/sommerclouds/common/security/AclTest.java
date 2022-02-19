@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.summerclouds.common.core.tool.MCollection;
-import org.summerclouds.common.security.permissions.Acl;
-import org.summerclouds.common.security.permissions.WildcardAce;
+import org.summerclouds.common.security.permissions.PermSet;
+import org.summerclouds.common.security.permissions.Perm;
 import org.summerclounds.common.junit.TestCase;
 
 public class AclTest extends TestCase {
@@ -18,34 +18,34 @@ public class AclTest extends TestCase {
 	public void testDouble() {
 		// positive tests
 		{
-			Acl acl = new Acl("test:test:test","test:test:test");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test:test:test","test:test:test");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(1, list.size());
 		}
 		{
-			Acl acl = new Acl("test:test:test:Description a","test:test:test:Description b");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test:test:test:Description a","test:test:test:Description b");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(1, list.size());
 		}
 		{
-			Acl acl = new Acl("test:test","test:test:*");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test:test","test:test:*");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(1, list.size());
 		}
 		// negative tests
 		{
-			Acl acl = new Acl("test1:test:test","test2:test:test");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test1:test:test","test2:test:test");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(2, list.size());
 		}
 		{
-			Acl acl = new Acl("test:test1:test","test:test2:test");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test:test1:test","test:test2:test");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(2, list.size());
 		}
 		{
-			Acl acl = new Acl("test:test:test1","test:test:test2");
-			List<WildcardAce> list = MCollection.toList(acl);
+			PermSet acl = new PermSet("test:test:test1","test:test:test2");
+			List<Perm> list = MCollection.toList(acl);
 			assertEquals(2, list.size());
 		}
 	}
@@ -53,7 +53,7 @@ public class AclTest extends TestCase {
 	@Test
 	public void testWildcard() {
 		{
-			Acl acl = new Acl("test:test:*");
+			PermSet acl = new PermSet("test:test:*");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test:test1"));
 			assertTrue( acl.hasPermission("test:test:test2"));
@@ -62,7 +62,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test1:test:test"));
 		}
 		{
-			Acl acl = new Acl("test:test");
+			PermSet acl = new PermSet("test:test");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test:test1"));
 			assertTrue( acl.hasPermission("test:test:test2"));
@@ -71,7 +71,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test1:test:test"));
 		}
 		{
-			Acl acl = new Acl("test");
+			PermSet acl = new PermSet("test");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test:test1"));
 			assertTrue( acl.hasPermission("test:test:test2"));
@@ -80,7 +80,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test1:test:test"));
 		}
 		{
-			Acl acl = new Acl("test:*:test");
+			PermSet acl = new PermSet("test:*:test");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test1:test"));
 			assertTrue( acl.hasPermission("test:test2:test"));
@@ -89,7 +89,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test1:test:test"));
 		}
 		{
-			Acl acl = new Acl("*:test:test","test:test:test");
+			PermSet acl = new PermSet("*:test:test","test:test:test");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test1:test:test"));
 			assertTrue( acl.hasPermission("test2:test:test"));
@@ -102,7 +102,7 @@ public class AclTest extends TestCase {
 	@Test
 	public void testEnhanceWildcard() {
 		{ // enhance wildcard for instance
-			Acl acl = new Acl("test:test:test*");
+			PermSet acl = new PermSet("test:test:test*");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test:test1"));
 			assertTrue( acl.hasPermission("test:test:test2"));
@@ -111,7 +111,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test:bla:test"));
 		}
 		{ // enhance wildcard for action
-			Acl acl = new Acl("test:test*:test");
+			PermSet acl = new PermSet("test:test*:test");
 			assertTrue( acl.hasPermission("test:test:test"));
 			assertTrue( acl.hasPermission("test:test1:test"));
 			assertTrue( acl.hasPermission("test:test2:test"));
@@ -120,7 +120,7 @@ public class AclTest extends TestCase {
 			assertFalse( acl.hasPermission("test:test:bla"));
 		}
 		{ // no enhancing wildcard for object
-			Acl acl = new Acl("test*:test:test");
+			PermSet acl = new PermSet("test*:test:test");
 			assertTrue( acl.hasPermission("test*:test:test"));
 			
 			assertFalse( acl.hasPermission("test:test:test"));
@@ -134,7 +134,7 @@ public class AclTest extends TestCase {
 
 	@Test
 	public void testFullWildcard() {
-		Acl acl = new Acl("*");
+		PermSet acl = new PermSet("*");
 		assertTrue( acl.hasPermission("test:test:test"));
 		assertTrue( acl.hasPermission("test:test:test1"));
 		assertTrue( acl.hasPermission("test:test:test2"));
@@ -151,7 +151,7 @@ public class AclTest extends TestCase {
 	
 	@Test
 	public void testDistinctWildcard() {
-		Acl acl = new Acl("test:test:test");
+		PermSet acl = new PermSet("test:test:test");
 
 		assertTrue( acl.hasPermission("test:test:test"));
 		assertTrue( acl.hasPermission("test:test:*"));

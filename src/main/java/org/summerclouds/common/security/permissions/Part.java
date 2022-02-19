@@ -7,18 +7,18 @@ import java.util.TreeSet;
 import org.summerclouds.common.core.tool.MCollection;
 import org.summerclouds.common.core.tool.MString;
 
-public class AcePartSet implements Iterable<String>, Comparable<AcePartSet> {
+public class Part implements Iterable<String>, Comparable<Part> {
 
     private boolean wildcard = false;
     private Set<String> content = new TreeSet<>();
 
-    public AcePartSet(boolean wildcard) {
+    public Part(boolean wildcard) {
     	this.wildcard = wildcard;
     	if (wildcard)
     		this.content.add(Ace.WILDCARD_TOKEN);
     }
 	
-    public AcePartSet(String content) {
+    public Part(String content) {
     	content = content.trim();
     	if (content.equals( Ace.WILDCARD_TOKEN)) {
     		wildcard = true;
@@ -60,7 +60,7 @@ public class AcePartSet implements Iterable<String>, Comparable<AcePartSet> {
 	}
 
 	@Override
-	public int compareTo(AcePartSet o) {
+	public int compareTo(Part o) {
 		return MCollection.compare(this.content, o.content);
 	}
 

@@ -23,29 +23,32 @@ import java.io.Serializable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
-public class WildcardAce implements GrantedAuthority, Serializable {
+public class Perm implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final String WILDCARD2 = Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN;
+	private static final String WILDCARD3 = Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN;
 
     private String object; 
     private boolean fullWildcard = false;
     private boolean wildcard = false;
     
-    private AcePartSet actions; // action list
+    private Part actions; // action list
     
-    private AcePartSet instances; // instance list
+    private Part instances; // instance list
 
 	private String description = "";
     
-    public WildcardAce(String wildcardString) {
+    public Perm(String wildcardString) {
     	Assert.notNull(wildcardString, "wildcard string can't be null");
     	// parse
     	wildcardString = wildcardString.trim().toLowerCase();
     	Assert.hasText(wildcardString, "wildcard string must be set");
-    	if (wildcardString.equals(Ace.WILDCARD_TOKEN)) {
+    	if (wildcardString.equals(Ace.WILDCARD_TOKEN) || wildcardString.equals(WILDCARD2) || wildcardString.equals(WILDCARD3)) {
     		object = Ace.WILDCARD_TOKEN;
-    		actions = new AcePartSet(true);
-    		instances = new AcePartSet(true);
+    		actions = new Part(true);
+    		instances = new Part(true);
     		fullWildcard = true;
     		wildcard = true;
     		return;
@@ -58,19 +61,19 @@ public class WildcardAce implements GrantedAuthority, Serializable {
     	wildcard = object.equals(Ace.WILDCARD_TOKEN);
     	
     	if (parts.length < 2) {
-    		actions = new AcePartSet(true);
-    		instances = new AcePartSet(true);
+    		actions = new Part(true);
+    		instances = new Part(true);
     		return;
     	}
     	
-    	actions = new AcePartSet(parts[1]);
+    	actions = new Part(parts[1]);
     	
     	if (parts.length < 3) {
-    		instances = new AcePartSet(true);
+    		instances = new Part(true);
     		return;
     	}
     	
-    	instances = new AcePartSet(parts[2]);
+    	instances = new Part(parts[2]);
     	
     	if (parts.length > 3) {
     		description  = parts[3];
@@ -94,7 +97,7 @@ public class WildcardAce implements GrantedAuthority, Serializable {
     	return object;
     }
     
-    public AcePartSet getActions() {
+    public Part getActions() {
     	return actions;
     }
     
@@ -102,7 +105,7 @@ public class WildcardAce implements GrantedAuthority, Serializable {
     	return description;
     }
 
-    public AcePartSet getInstances() {
+    public Part getInstances() {
     	return instances;
     }
 

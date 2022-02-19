@@ -2,20 +2,20 @@ package org.summerclouds.common.security.realm;
 
 import java.util.HashMap;
 
-import org.summerclouds.common.security.permissions.Acl;
+import org.summerclouds.common.security.permissions.PermSet;
 
 public class MemoryUserAclRealm implements UserAclRealm {
 
-	private HashMap<String, Acl> acls = new HashMap<>();
+	private HashMap<String, PermSet> acls = new HashMap<>();
 	
 	@Override
-	public Acl getAclForUser(String username) {
-		Acl acl = acls.get(username);
+	public PermSet getAclForUser(String username) {
+		PermSet acl = acls.get(username);
 		return acl;
 	}
 
 	public MemoryUserAclRealm add(String username, String ... aces) {
-		Acl acl = new Acl(aces);
+		PermSet acl = new PermSet(aces);
 		acls.put(username, acl);
 		return this;
 	}

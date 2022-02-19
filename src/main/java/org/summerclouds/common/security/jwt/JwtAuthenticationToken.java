@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.summerclouds.common.core.log.Log;
+import org.summerclouds.common.core.tool.MSystem;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,6 +40,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     
     public JwtAuthenticationToken(String token, Claims claims, Collection<? extends GrantedAuthority> authorities) {
     	super(authorities);
+    	MSystem.acceptCaller(AbstractJwtAuthenticationProvider.class, DaoJwtAuthenticationProvider.class);
         this.token = token;
         this.claims = claims;
         setAuthenticated(true);

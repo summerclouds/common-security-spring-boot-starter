@@ -1,7 +1,6 @@
 package org.summerclouds.common.security;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -24,8 +23,6 @@ import org.summerclouds.common.core.log.MLog;
 import org.summerclouds.common.core.security.ISecurity;
 import org.summerclouds.common.core.security.ISubject;
 import org.summerclouds.common.core.security.ISubjectEnvironment;
-import org.summerclouds.common.core.tool.MCast;
-import org.summerclouds.common.core.tool.MCollection;
 import org.summerclouds.common.core.tool.MSpring;
 import org.summerclouds.common.core.tool.MSystem;
 import org.summerclouds.common.core.util.SingleList;
@@ -137,55 +134,6 @@ public class SecurityImpl extends MLog implements ISecurity{
 			return true;
 		} catch (AccessDeniedException e) {}
 		return false;
-	}
-
-	@Override
-	public boolean hasPermissionByList(List<String> map, ISubject account, String objectIdent) {
-        boolean access = false;
-        String principal = account.getName();
-        for (String g : map) {
-
-            g = g.trim();
-            if (g.length() == 0) continue;
-
-            if (g.startsWith("policy:")) {
-                access = MCast.toboolean(g.substring(7), access);
-            } else if (g.startsWith("user:")) {
-                if (g.substring(5).equals(principal)) {
-                    log().d("access granted", objectIdent, g);
-                    access = true;
-                    break;
-                }
-            } else if (g.startsWith("notuser:")) {
-                if (g.substring(8).equals(principal)) {
-                    log().d("access denied", objectIdent, g);
-                    access = false;
-                    break;
-                }
-            } else if (g.startsWith("not:")) {
-                if (account.hasRole(g.substring(4))) {
-                    log().d("access denied", objectIdent, g);
-                    access = false;
-                    break;
-                }
-            } else if (g.equals("*")) {
-                log().d("access granted", objectIdent, g);
-                access = true;
-                break;
-            } else if (account.hasRole(g)) {
-                log().d("access granted", objectIdent, g);
-                access = true;
-                break;
-            }
-            ;
-        }
-        return access;
-    }
-
-	@Override
-	public boolean hasPermissionByList(String list, ISubject account, String objectIdent) {
-        List<String> map = MCollection.toList(list.split(";"));
-        return hasPermissionByList(map, account, objectIdent);
 	}
 
 	@Override

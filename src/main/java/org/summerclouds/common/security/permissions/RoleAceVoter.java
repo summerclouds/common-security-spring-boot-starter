@@ -74,8 +74,8 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 				result = ACCESS_DENIED;
 				// Attempt to find a matching granted authority
 				for (GrantedAuthority authority : authorities) {
-					if (	authority instanceof PermissionSet &&
-							((PermissionSet)authority).hasPermission(roleAsPermission) )
+					if (	authority instanceof Permissions &&
+							((Permissions)authority).hasPermission(roleAsPermission) )
 							return ACCESS_GRANTED;
 					else
 					if (legacy && rolename.equalsIgnoreCase(authority.getAuthority())) {

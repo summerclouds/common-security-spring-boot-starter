@@ -54,8 +54,8 @@ public class ResourceAceVoter implements AccessDecisionVoter<Object> {
 				String attributePermission = prepareAttribute(toString(attribute), object);
 				result = ACCESS_DENIED;
 				for (GrantedAuthority authority : authorities)
-					if (	authority instanceof PermissionSet &&
-							((PermissionSet)authority).hasPermission( attributePermission ) )
+					if (	authority instanceof Permissions &&
+							((Permissions)authority).hasPermission( attributePermission ) )
 							return ACCESS_GRANTED;
 			}
 		}
