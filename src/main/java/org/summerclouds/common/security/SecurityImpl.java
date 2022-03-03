@@ -23,6 +23,7 @@ import org.summerclouds.common.core.log.MLog;
 import org.summerclouds.common.core.security.ISecurity;
 import org.summerclouds.common.core.security.ISubject;
 import org.summerclouds.common.core.security.ISubjectEnvironment;
+import org.summerclouds.common.core.tool.MSecurity;
 import org.summerclouds.common.core.tool.MSpring;
 import org.summerclouds.common.core.tool.MSystem;
 import org.summerclouds.common.core.util.SingleList;
@@ -162,12 +163,12 @@ public class SecurityImpl extends MLog implements ISecurity{
 
 	@Override
 	public boolean isAdmin() {
-		return hasPermission(Ace.WILDCARD_TOKEN);
+		return hasPermission(MSecurity.WILDCARD_TOKEN);
 	}
 
 	@Override
 	public boolean isAdmin(ISubject subject) {
-		return hasPermission(subject, Ace.WILDCARD_TOKEN);
+		return hasPermission(subject, MSecurity.WILDCARD_TOKEN);
 	}
 
 	@Override
@@ -236,7 +237,7 @@ public class SecurityImpl extends MLog implements ISecurity{
 	@Override
 	public boolean hasPermission(Class<?> clazz) {
 		if (clazz == null) return false;
-		return hasPermission(Class.class, Ace.EXECUTE, MSystem.getCanonicalClassName(clazz) );
+		return hasPermission(Class.class, MSecurity.EXECUTE, MSystem.getCanonicalClassName(clazz) );
 	}
 
 

@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.summerclouds.common.core.tool.MCollection;
+import org.summerclouds.common.core.tool.MSecurity;
 import org.summerclouds.common.core.tool.MString;
 
 public class Part implements Iterable<String>, Comparable<Part> {
@@ -15,25 +16,25 @@ public class Part implements Iterable<String>, Comparable<Part> {
     public Part(boolean wildcard) {
     	this.wildcard = wildcard;
     	if (wildcard)
-    		this.content.add(Ace.WILDCARD_TOKEN);
+    		this.content.add(MSecurity.WILDCARD_TOKEN);
     }
 	
     public Part(String content) {
     	content = content.trim();
-    	if (content.equals( Ace.WILDCARD_TOKEN)) {
+    	if (content.equals( MSecurity.WILDCARD_TOKEN)) {
     		wildcard = true;
-    		this.content.add(Ace.WILDCARD_TOKEN);
+    		this.content.add(MSecurity.WILDCARD_TOKEN);
     		return;
     	}
     	
-    	String[] parts = content.split(Ace.SUBPART_DIVIDER_TOKEN);
+    	String[] parts = content.split(MSecurity.SUBPART_DIVIDER_TOKEN);
     	for (String part : parts) {
     		part = part.trim();
     		if (part.length() > 0) {
-    			if (part.equals(Ace.WILDCARD_TOKEN)) {
+    			if (part.equals(MSecurity.WILDCARD_TOKEN)) {
     				wildcard = true;
     				this.content.clear();
-    				this.content.add(Ace.WILDCARD_TOKEN);
+    				this.content.add(MSecurity.WILDCARD_TOKEN);
     				return;
     			}
     			this.content.add(part);
@@ -56,7 +57,7 @@ public class Part implements Iterable<String>, Comparable<Part> {
 	}
 
 	public String toString() {
-		return MString.join(iterator(), Ace.SUBPART_DIVIDER_TOKEN);
+		return MString.join(iterator(), MSecurity.SUBPART_DIVIDER_TOKEN);
 	}
 
 	@Override

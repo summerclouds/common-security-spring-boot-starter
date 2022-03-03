@@ -22,13 +22,14 @@ import java.io.Serializable;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
+import org.summerclouds.common.core.tool.MSecurity;
 
 public class Perm implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String WILDCARD2 = Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN;
-	private static final String WILDCARD3 = Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN + Ace.PART_DIVIDER_TOKEN + Ace.WILDCARD_TOKEN;
+	private static final String WILDCARD2 = MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN;
+	private static final String WILDCARD3 = MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN;
 
     private String object; 
     private boolean fullWildcard = false;
@@ -45,8 +46,8 @@ public class Perm implements GrantedAuthority, Serializable {
     	// parse
     	wildcardString = wildcardString.trim().toLowerCase();
     	Assert.hasText(wildcardString, "wildcard string must be set");
-    	if (wildcardString.equals(Ace.WILDCARD_TOKEN) || wildcardString.equals(WILDCARD2) || wildcardString.equals(WILDCARD3)) {
-    		object = Ace.WILDCARD_TOKEN;
+    	if (wildcardString.equals(MSecurity.WILDCARD_TOKEN) || wildcardString.equals(WILDCARD2) || wildcardString.equals(WILDCARD3)) {
+    		object = MSecurity.WILDCARD_TOKEN;
     		actions = new Part(true);
     		instances = new Part(true);
     		fullWildcard = true;
@@ -54,11 +55,11 @@ public class Perm implements GrantedAuthority, Serializable {
     		return;
     	}
     	
-    	String[] parts = wildcardString.split(Ace.PART_DIVIDER_TOKEN,4);
+    	String[] parts = wildcardString.split(MSecurity.PART_DIVIDER_TOKEN,4);
     	Assert.isTrue(parts.length > 0, "minimum object name"); // paranoia
     	
     	object = parts[0].trim();
-    	wildcard = object.equals(Ace.WILDCARD_TOKEN);
+    	wildcard = object.equals(MSecurity.WILDCARD_TOKEN);
     	
     	if (parts.length < 2) {
     		actions = new Part(true);
@@ -116,8 +117,8 @@ public class Perm implements GrantedAuthority, Serializable {
 	
 	public String toString() {
 		if (isFullWildcard())
-			return Ace.WILDCARD_TOKEN;
-		return object + Ace.PART_DIVIDER_TOKEN + actions + Ace.PART_DIVIDER_TOKEN + instances + Ace.PART_DIVIDER_TOKEN + description;
+			return MSecurity.WILDCARD_TOKEN;
+		return object + MSecurity.PART_DIVIDER_TOKEN + actions + MSecurity.PART_DIVIDER_TOKEN + instances + MSecurity.PART_DIVIDER_TOKEN + description;
 	}
 
 }

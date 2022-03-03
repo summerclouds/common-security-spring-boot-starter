@@ -6,6 +6,7 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.summerclouds.common.core.tool.MSecurity;
 
 public class RoleAceVoter implements AccessDecisionVoter<Object> {
 
@@ -13,7 +14,7 @@ public class RoleAceVoter implements AccessDecisionVoter<Object> {
 	
 	private String rolePrefixUpper = "ROLE_";
 	private String rolePrefixLower = "role_";
-	public static final String ROLE_ACE = "role"+Ace.PART_DIVIDER_TOKEN+"access" + Ace.PART_DIVIDER_TOKEN;
+	public static final String ROLE_ACE = "role"+MSecurity.PART_DIVIDER_TOKEN+"access" + MSecurity.PART_DIVIDER_TOKEN;
 	private boolean legacy = true;
 
 	public String getRolePrefix() {
