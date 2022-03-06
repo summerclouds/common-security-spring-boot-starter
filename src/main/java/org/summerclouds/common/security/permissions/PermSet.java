@@ -22,15 +22,15 @@ public class PermSet implements Iterable<Perm>, Permissions {
 
 		@Override
 		public int compare(Perm o1, Perm o2) {
-			int ret = o1.getObject().compareTo(o2.getObject());
+			int ret = o1.getObjectClass().compareTo(o2.getObjectClass());
 			if (ret != 0) return ret;
 			ret = o1.getActions().compareTo(o2.getActions());
 			if (ret != 0) return ret;
-			ret = o1.getInstances().compareTo(o2.getInstances());
+			ret = o1.getObjectInstances().compareTo(o2.getObjectInstances());
 			return ret;
 		}
 	});
-	private Map<String,Actions> objects = new HashMap<>();
+	private Map<String,Actions> clazzes = new HashMap<>();
 
 	public PermSet() {}
 	
@@ -57,14 +57,14 @@ public class PermSet implements Iterable<Perm>, Permissions {
 		
 		if (perm.isFullWildcard()) {
 			fullWildcard  = true;
-			objects.clear();
+			clazzes.clear();
 			return;
 		}
 		
-		Actions actionMap = objects.get(perm.getObject());
+		Actions actionMap = clazzes.get(perm.getObjectClass());
 		if (actionMap == null) {
 			actionMap = new Actions();
-			objects.put(perm.getObject(), actionMap);
+			clazzes.put(perm.getObjectClass(), actionMap);
 		}
 		for (String action : perm.getActions()) {
 			Instances instanceSet = actionMap.get(action);
@@ -72,14 +72,14 @@ public class PermSet implements Iterable<Perm>, Permissions {
 				instanceSet = new Instances();
 				actionMap.put(action, instanceSet);
 			}
-			for (String instance : perm.getInstances())
+			for (String instance : perm.getObjectInstances())
 				instanceSet.add(instance);
 		}
 		
 	}
 	
 	public String toString() {
-		return MSystem.toString(this,fullWildcard,objects);
+		return MSystem.toString(this,fullWildcard,clazzes);
 	}
 	
 	@Override
@@ -91,16 +91,16 @@ public class PermSet implements Iterable<Perm>, Permissions {
 		
 		if (fullWildcard) return true;
 		
-		if (!testify.getObject().equals(MSecurity.WILDCARD_TOKEN)) {
-			Actions actions = objects.get(testify.getObject());
+		if (!testify.getObjectClass().equals(MSecurity.WILDCARD_TOKEN)) {
+			Actions actions = clazzes.get(testify.getObjectClass());
 			if (actions != null && actions.hasPermission(testify))
 				return true;
-			actions = objects.get(MSecurity.WILDCARD_TOKEN);
+			actions = clazzes.get(MSecurity.WILDCARD_TOKEN);
 			if (actions != null) 
 				return actions.hasPermission(testify);
 		} else {
 			// distinct wildcard
-			for (Actions actions : objects.values()) {
+			for (Actions actions : clazzes.values()) {
 				return actions.hasPermission(testify);
 			}
 		}

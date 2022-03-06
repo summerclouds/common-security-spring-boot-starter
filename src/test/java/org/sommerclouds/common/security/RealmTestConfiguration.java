@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.summerclouds.common.core.security.ISecurity;
-import org.summerclouds.common.security.SecurityImpl;
+import org.summerclouds.common.security.SecurityService;
 import org.summerclouds.common.security.permissions.ResourceAceVoter;
 import org.summerclouds.common.security.permissions.RoleAceVoter;
 import org.summerclouds.common.security.realm.MemoryRoleAclRealm;
@@ -56,7 +56,7 @@ public class RealmTestConfiguration {
 
     @Bean
     public ISecurity security() {
-    	return new SecurityImpl();
+    	return new SecurityService();
     }
     
 	@Bean

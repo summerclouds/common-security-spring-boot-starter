@@ -9,7 +9,7 @@ import org.summerclouds.common.core.tool.MSecurity;
  */
 public class Ace {
 
-	private String object;
+	private String clazz;
 	
 	private String action;
 	
@@ -17,8 +17,8 @@ public class Ace {
 	
 	private String description = "";
 
-	public Ace(String object, String action, String instance) {
-		this.object = object == null ? MSecurity.WILDCARD_TOKEN : normalize(object);
+	public Ace(String clazz, String action, String instance) {
+		this.clazz = clazz == null ? MSecurity.WILDCARD_TOKEN : normalize(clazz);
 		this.action = action == null ? MSecurity.WILDCARD_TOKEN : normalize(action);
 		this.instance = instance == null ? MSecurity.WILDCARD_TOKEN : normalize(instance);
 	}
@@ -26,11 +26,11 @@ public class Ace {
 	public Ace(String perm) {
 		
 		String[] parts = perm.split(MSecurity.PART_DIVIDER_TOKEN, 4);
-		String object = null;
+		String clazz = null;
 		String action = null;
 		String instance = null;
 		if (parts.length > 0) {
-			object = parts[0];
+			clazz = parts[0];
 			if (parts.length > 1) {
 				action = parts[1];
 				if (parts.length > 2) {
@@ -41,7 +41,7 @@ public class Ace {
 			}
 		}
 			
-		this.object = object == null ? MSecurity.WILDCARD_TOKEN : normalize(object);
+		this.clazz = clazz == null ? MSecurity.WILDCARD_TOKEN : normalize(clazz);
 		this.action = action == null ? MSecurity.WILDCARD_TOKEN : normalize(action);
 		this.instance = instance == null ? MSecurity.WILDCARD_TOKEN : normalize(instance);
 		
@@ -54,8 +54,8 @@ public class Ace {
 		return str;
 	}
 
-	public String getObject() {
-		return object;
+	public String getObjectClass() {
+		return clazz;
 	}
 
 	public String getAction() {
@@ -67,11 +67,11 @@ public class Ace {
 	}	
 	
 	public String toString() {
-		return object + MSecurity.PART_DIVIDER_TOKEN + action + MSecurity.PART_DIVIDER_TOKEN + instance + MSecurity.PART_DIVIDER_TOKEN + description;
+		return clazz + MSecurity.PART_DIVIDER_TOKEN + action + MSecurity.PART_DIVIDER_TOKEN + instance + MSecurity.PART_DIVIDER_TOKEN + description;
 	}
 
-	public static String normalize(String object, String action, String instance) {
-		return normalize(object) + MSecurity.PART_DIVIDER_TOKEN + normalize(action) + MSecurity.PART_DIVIDER_TOKEN + normalize(instance);
+	public static String normalize(String clazz, String action, String instance) {
+		return normalize(clazz) + MSecurity.PART_DIVIDER_TOKEN + normalize(action) + MSecurity.PART_DIVIDER_TOKEN + normalize(instance);
 	}
 	
 }

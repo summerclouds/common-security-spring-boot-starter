@@ -44,7 +44,7 @@ public class SubjectImpl implements ISubject {
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
 		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl( RoleAceVoter.ROLE_PREFIX + role));
 		try {
-			adm.decide(authentication, SecurityImpl.FILTER_INVOCATION, list);
+			adm.decide(authentication, SecurityService.FILTER_INVOCATION, list);
 			return true;
 		} catch (AccessDeniedException e) {}
 		return false;
@@ -55,7 +55,7 @@ public class SubjectImpl implements ISubject {
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
 		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + ace));
 		try {
-			adm.decide(authentication, SecurityImpl.FILTER_INVOCATION, list);
+			adm.decide(authentication, SecurityService.FILTER_INVOCATION, list);
 			return true;
 		} catch (AccessDeniedException e) {}
 		return false;
@@ -66,7 +66,7 @@ public class SubjectImpl implements ISubject {
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
 		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(object,action,instance)));
 		try {
-			adm.decide(authentication, SecurityImpl.FILTER_INVOCATION, list);
+			adm.decide(authentication, SecurityService.FILTER_INVOCATION, list);
 			return true;
 		} catch (AccessDeniedException e) {}
 		return false;

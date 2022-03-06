@@ -6,8 +6,8 @@ Die Implementierung adaptiert das Konzept von `apache-shiro`
 bei dem direkt Resourcen durch `access control entities (ace)`
 definiert werden.
 
-Am Benutzer (subject) werden permissions in sets definiert. Die Definitionen
-können Platzhalter beinhalten die Rechte gruppieren. Ein
+Am Benutzer (subject) werden permissions in sets definiert. Die 
+Definitionen können Platzhalter beinhalten die Rechte gruppieren. Ein
 Platzhalter wird durch einen Stern `*` (wildcard) markiert.
 
 An der Resource (object) wird die ACE definiert. Mehrere Einträge
@@ -24,13 +24,14 @@ In Spring werden ACE-Definitionen mit dem Prefix `ace_` bzw.
 
 === Konzept
 
-Eine Permission besteht aus `object`, `action`, `instance` und Beschreibung.
+Eine Permission besteht aus `object class`, `action`, `object instance` und 
+Beschreibung.
 Die Teile werden durch Doppelpunkt getrennt. Ungenutzte Teile
 können von links nach rechts weggelassen werden. Die Teile
 werden getrimmt, können also Whitespaces enthalten, die entfernt
 werden.
 
-Das `object` definiert den eindeutigen Namen des berechtigten
+Die `object class` definiert den eindeutigen Namen des berechtigten
 Resource-Types. Dieser Teil kann nur durch den Platzhalter für alle
 Resourcen ersetzt werden. Es kann immer nur ein Name angegeben 
 werden.

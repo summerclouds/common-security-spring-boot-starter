@@ -31,7 +31,7 @@ import org.summerclouds.common.security.permissions.Ace;
 import org.summerclouds.common.security.permissions.ResourceAceVoter;
 import org.summerclouds.common.security.permissions.RoleAceVoter;
 
-public class SecurityImpl extends MLog implements ISecurity{
+public class SecurityService extends MLog implements ISecurity{
 
 	private static final String ATTR_LOCALE = "locale";
 	static final FilterInvocation FILTER_INVOCATION = new FilterInvocation("/","GET");
@@ -80,8 +80,8 @@ public class SecurityImpl extends MLog implements ISecurity{
 	}
 
 	@Override
-	public boolean hasPermission(Class<?> object, String action, String instance) {
-		return hasPermission(MSystem.getCanonicalClassName(object), action, instance);
+	public boolean hasPermission(Class<?> clazz, String action, String instance) {
+		return hasPermission(MSystem.getCanonicalClassName(clazz), action, instance);
 	}
 
 	@Override
@@ -97,10 +97,10 @@ public class SecurityImpl extends MLog implements ISecurity{
 	}
 
 	@Override
-	public boolean hasPermission(String object, String action, String instance) {
+	public boolean hasPermission(String clazz, String action, String instance) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
-		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(object,action,instance)));
+		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(clazz,action,instance)));
 		try {
 			adm.decide(authentication, FILTER_INVOCATION, list);
 			return true;
@@ -109,8 +109,8 @@ public class SecurityImpl extends MLog implements ISecurity{
 	}
 
 	@Override
-	public boolean hasPermission(ISubject subject, Class<?> object, String action, String instance) {
-		return hasPermission(subject,MSystem.getCanonicalClassName(object), action, instance);
+	public boolean hasPermission(ISubject subject, Class<?> clazz, String action, String instance) {
+		return hasPermission(subject,MSystem.getCanonicalClassName(clazz), action, instance);
 	}
 
 	@Override
@@ -126,10 +126,10 @@ public class SecurityImpl extends MLog implements ISecurity{
 	}
 
 	@Override
-	public boolean hasPermission(ISubject subject, String object, String action, String instance) {
+	public boolean hasPermission(ISubject subject, String clazz, String action, String instance) {
 		Authentication authentication = ((SubjectImpl)subject).getAuthentication();
 		AccessDecisionManager adm = MSpring.lookup(AccessDecisionManager.class);
-		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(object,action,instance)));
+		Collection<ConfigAttribute> list = new SingleList<>(new ConfigAttributeImpl(ResourceAceVoter.PREFIX_UPPER + Ace.normalize(clazz,action,instance)));
 		try {
 			adm.decide(authentication, FILTER_INVOCATION, list);
 			return true;

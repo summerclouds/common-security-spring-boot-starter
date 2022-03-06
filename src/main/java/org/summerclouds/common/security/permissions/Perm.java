@@ -31,7 +31,7 @@ public class Perm implements GrantedAuthority, Serializable {
 	private static final String WILDCARD2 = MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN;
 	private static final String WILDCARD3 = MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN + MSecurity.PART_DIVIDER_TOKEN + MSecurity.WILDCARD_TOKEN;
 
-    private String object; 
+    private String clazz; 
     private boolean fullWildcard = false;
     private boolean wildcard = false;
     
@@ -47,7 +47,7 @@ public class Perm implements GrantedAuthority, Serializable {
     	wildcardString = wildcardString.trim().toLowerCase();
     	Assert.hasText(wildcardString, "wildcard string must be set");
     	if (wildcardString.equals(MSecurity.WILDCARD_TOKEN) || wildcardString.equals(WILDCARD2) || wildcardString.equals(WILDCARD3)) {
-    		object = MSecurity.WILDCARD_TOKEN;
+    		clazz = MSecurity.WILDCARD_TOKEN;
     		actions = new Part(true);
     		instances = new Part(true);
     		fullWildcard = true;
@@ -58,8 +58,8 @@ public class Perm implements GrantedAuthority, Serializable {
     	String[] parts = wildcardString.split(MSecurity.PART_DIVIDER_TOKEN,4);
     	Assert.isTrue(parts.length > 0, "minimum object name"); // paranoia
     	
-    	object = parts[0].trim();
-    	wildcard = object.equals(MSecurity.WILDCARD_TOKEN);
+    	clazz = parts[0].trim();
+    	wildcard = clazz.equals(MSecurity.WILDCARD_TOKEN);
     	
     	if (parts.length < 2) {
     		actions = new Part(true);
@@ -94,8 +94,8 @@ public class Perm implements GrantedAuthority, Serializable {
     }
 
     
-    public String getObject() {
-    	return object;
+    public String getObjectClass() {
+    	return clazz;
     }
     
     public Part getActions() {
@@ -106,7 +106,7 @@ public class Perm implements GrantedAuthority, Serializable {
     	return description;
     }
 
-    public Part getInstances() {
+    public Part getObjectInstances() {
     	return instances;
     }
 
@@ -118,7 +118,7 @@ public class Perm implements GrantedAuthority, Serializable {
 	public String toString() {
 		if (isFullWildcard())
 			return MSecurity.WILDCARD_TOKEN;
-		return object + MSecurity.PART_DIVIDER_TOKEN + actions + MSecurity.PART_DIVIDER_TOKEN + instances + MSecurity.PART_DIVIDER_TOKEN + description;
+		return clazz + MSecurity.PART_DIVIDER_TOKEN + actions + MSecurity.PART_DIVIDER_TOKEN + instances + MSecurity.PART_DIVIDER_TOKEN + description;
 	}
 
 }

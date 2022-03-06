@@ -15,10 +15,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.summerclouds.common.core.internal.SpringSummerCloudsCoreAutoConfiguration;
+import org.summerclouds.common.junit.TestCase;
 import org.summerclouds.common.security.internal.SpringSummerCloudsSecurityAutoConfiguration;
 import org.summerclouds.common.security.permissions.PermSet;
 import org.summerclouds.common.security.realm.RealmManager;
-import org.summerclounds.common.junit.TestCase;
 
 @SpringBootTest(classes = {
 		RealmManager.class, 

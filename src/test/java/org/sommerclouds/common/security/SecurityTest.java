@@ -12,9 +12,9 @@ import org.summerclouds.common.core.security.ISecurity;
 import org.summerclouds.common.core.security.ISubject;
 import org.summerclouds.common.core.security.ISubjectEnvironment;
 import org.summerclouds.common.core.tool.MSecurity;
+import org.summerclouds.common.junit.TestCase;
 import org.summerclouds.common.security.internal.SpringSummerCloudsSecurityAutoConfiguration;
 import org.summerclouds.common.security.realm.RealmManager;
-import org.summerclounds.common.junit.TestCase;
 
 @SpringBootTest(classes = {
 		RealmManager.class, 
