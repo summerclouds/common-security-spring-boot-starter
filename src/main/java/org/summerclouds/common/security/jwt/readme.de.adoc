@@ -1,0 +1,14 @@
+
+== Jwt Token Authentication
+
+Mit dem `JwtAuthenticationFilter` wird die Authentifizierung
+mittels Bearer Token aktiviert.
+
+Zusätzlich zur Standart Authentifizierung im Header kann 
+auch die die Authentifizierung mittels HTTP-Query-Parameter
+aktiviert werden. 
+
+=== Konfiguration
+
+* org.summerclouds.common.security.jwt.JwtAuthenticationConverter.alternativeEnabled=false
+* org.summerclouds.common.security.jwt.JwtAuthenticationConverter.alternativeParameter=_jwt_token
