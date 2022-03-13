@@ -12,6 +12,7 @@ public class RealmUser extends User implements RemotePasswordValidation {
 
 	private static final long serialVersionUID = 1L;
 	private Realm realm;
+	private boolean doNotEraseCredentials = false;
 
 	public RealmUser(Realm realm, String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
@@ -36,6 +37,20 @@ public class RealmUser extends User implements RemotePasswordValidation {
 			return true;
 		} 
 		return false;
+	}
+
+	@Override
+	public void eraseCredentials() {
+		if (!doNotEraseCredentials)
+			super.eraseCredentials();
+	}
+
+	public boolean isDoNotEraseCredentials() {
+		return doNotEraseCredentials;
+	}
+
+	public void setDoNotEraseCredentials(boolean doNotEraseCredentials) {
+		this.doNotEraseCredentials = doNotEraseCredentials;
 	}
 
 }

@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.summerclouds.common.core.crypt.IPasswordEncoder;
+import org.summerclouds.common.core.security.ISecurity;
+import org.summerclouds.common.security.SecurityService;
 import org.summerclouds.common.security.error.RestResponseStatusExceptionResolver;
 
 @Configuration
@@ -27,5 +29,10 @@ public class SpringSummerCloudsSecurityAutoConfiguration {
     public HandlerExceptionResolver errorHandler() {
     	return new RestResponseStatusExceptionResolver();
     }
-    
+
+    @Bean
+    public ISecurity security() {
+    	return new SecurityService();
+    }
+
 }

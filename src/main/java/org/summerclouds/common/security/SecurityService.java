@@ -36,7 +36,7 @@ public class SecurityService extends MLog implements ISecurity{
 	private static final String ATTR_LOCALE = "locale";
 	static final FilterInvocation FILTER_INVOCATION = new FilterInvocation("/","GET");
 	
-	@Value("${security.admin.username}")
+	@Value("${security.admin.username:admin}")
 	private String adminUsername = "admin";
 
 	@Override
