@@ -24,7 +24,7 @@ public class SpringSummerCloudsSecurityAutoConfiguration {
     }
 
     @Bean
-    public HandlerExceptionResolver customExceptionResolver() {
+    public HandlerExceptionResolver errorHandler() {
     	return new RestResponseStatusExceptionResolver();
     }
     
