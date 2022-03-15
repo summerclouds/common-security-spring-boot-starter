@@ -14,7 +14,6 @@ import org.summerclouds.common.core.internal.SpringSummerCloudsCoreAutoConfigura
 import org.summerclouds.common.core.tool.MHttp;
 import org.summerclouds.common.junit.TestCase;
 import org.summerclouds.common.security.DefaultRestWebSecurityConfiguration;
-import org.summerclouds.common.security.error.RestResponseStatusExceptionResolver;
 import org.summerclouds.common.security.internal.SpringSummerCloudsSecurityAutoConfiguration;
 import org.summerclouds.common.security.realm.RealmManager;
 
@@ -23,8 +22,7 @@ import org.summerclouds.common.security.realm.RealmManager;
 				HelloController.class,
 				DefaultRestWebSecurityConfiguration.class,
 				SpringSummerCloudsCoreAutoConfiguration.class,
-				SpringSummerCloudsSecurityAutoConfiguration.class,
-				RestResponseStatusExceptionResolver.class
+				SpringSummerCloudsSecurityAutoConfiguration.class
 		},
 		properties = {
 				"org.summerclouds.security.default.enabled=true",

@@ -135,6 +135,9 @@ role:access:*   :Access all roles
 role:access:user:Access to role user
 ----
 
+=== Konfiguration
+
+* org.summerclouds.common.security.permissions.ResourceAceVoter.trace=false
 
 
 

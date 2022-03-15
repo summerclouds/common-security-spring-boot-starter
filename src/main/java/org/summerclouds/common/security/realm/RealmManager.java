@@ -11,6 +11,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.summerclouds.common.core.log.MLog;
 import org.summerclouds.common.core.tool.MSpring;
+import org.summerclouds.common.core.tool.MTracing;
+import org.summerclouds.common.core.tracing.IScope;
 import org.summerclouds.common.security.permissions.PermSet;
 
 public class RealmManager extends MLog implements UserDetailsService {
@@ -27,23 +29,25 @@ public class RealmManager extends MLog implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Assert.hasText(username,"Usernam can't be empty");
-		username = RealmUtil.normalize(username);
-		loadRealms();
-		if (realms == null) return null;
-		for (Map.Entry<String, Realm> realm : realms.entrySet()) {
-			try {
-				if (realm.getValue().isEnabled() && realm.getValue() instanceof UserRealm) {
-					User user = ((UserRealm)realm.getValue()).getUser(username);
-					if (user != null) {
-						log().d("load user {1} from realm {2}",username,realm.getKey());
-						return user;
+		try (IScope scope = MTracing.enter("load user", "username", username)) {
+			username = RealmUtil.normalize(username);
+			loadRealms();
+			if (realms == null) return null;
+			for (Map.Entry<String, Realm> realm : realms.entrySet()) {
+				try {
+					if (realm.getValue().isEnabled() && realm.getValue() instanceof UserRealm) {
+						User user = ((UserRealm)realm.getValue()).getUser(username);
+						if (user != null) {
+							log().d("load user {1} from realm {2}",username,realm.getKey());
+							return user;
+						}
 					}
+				} catch (Throwable t) {
+					log().w("can't load user from realm {1}", realm.getKey(), t);
 				}
-			} catch (Throwable t) {
-				log().w("can't load user from realm {1}", realm.getKey(), t);
 			}
+			throw new UsernameNotFoundException("user not found " + username);
 		}
-		throw new UsernameNotFoundException("user not found " + username);
 	}
 	
 	public PermSet loadAclForUsername(String username) {

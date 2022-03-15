@@ -9,13 +9,18 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
+import org.summerclouds.common.core.cfg.CfgBoolean;
 import org.summerclouds.common.core.error.MException;
+import org.summerclouds.common.core.log.Log;
 import org.summerclouds.common.core.parser.StringCompiler;
+import org.summerclouds.common.core.tool.MSecurity;
 
 public class ResourceAceVoter implements AccessDecisionVoter<Object> {
 
 	public static final String PREFIX_UPPER = "ACE_";
 	public static final String PREFIX_LOWER = "ace_";
+	private static final Log log = Log.getLog(ResourceAceVoter.class);
+	private static CfgBoolean CFG_TRACE_ACCESS = new CfgBoolean(ResourceAceVoter.class, "trace", false);
 	
 	@Override
 	public boolean supports(ConfigAttribute attribute) {
@@ -55,12 +60,16 @@ public class ResourceAceVoter implements AccessDecisionVoter<Object> {
 				result = ACCESS_DENIED;
 				for (GrantedAuthority authority : authorities)
 					if (	authority instanceof Permissions &&
-							((Permissions)authority).hasPermission( attributePermission ) )
+							((Permissions)authority).hasPermission( attributePermission ) ) {
+						if (CFG_TRACE_ACCESS.value())
+							log.d("access granted for {1} on {2}", MSecurity.getCurrent(), object);
 							return ACCESS_GRANTED;
+					}
 			}
 		}
-		
-		return result; // it will not deny access, it only grants access
+		if (CFG_TRACE_ACCESS.value() && result == ACCESS_DENIED)
+			log.d("access denied for {1} on {2}", MSecurity.getCurrent(), object);
+		return result; // it will only deny access when a permission set is found
 	}
 
 	private String prepareAttribute(String attribute, Object object) {
