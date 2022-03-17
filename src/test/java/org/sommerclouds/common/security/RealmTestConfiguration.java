@@ -8,11 +8,7 @@ import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
-import org.summerclouds.common.core.security.ISecurity;
-import org.summerclouds.common.security.SecurityService;
 import org.summerclouds.common.security.permissions.ResourceAceVoter;
 import org.summerclouds.common.security.permissions.RoleAceVoter;
 import org.summerclouds.common.security.realm.MemoryRoleAclRealm;
@@ -24,10 +20,10 @@ import org.summerclouds.common.security.realm.Realm;
 
 public class RealmTestConfiguration {
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }    
+//    @Bean
+//    public PasswordEncoder encoder() {
+//        return new BCryptPasswordEncoder();
+//    }    
 
     @Bean
     public Realm userRealm() {
@@ -54,10 +50,10 @@ public class RealmTestConfiguration {
     	return new MemoryRoleRealm().add("admin").add("user");
     }
 
-    @Bean
-    public ISecurity security() {
-    	return new SecurityService();
-    }
+//    @Bean
+//    public ISecurity security() {
+//    	return new SecurityService();
+//    }
     
 	@Bean
 	public AccessDecisionManager accessDecisionManager() {
