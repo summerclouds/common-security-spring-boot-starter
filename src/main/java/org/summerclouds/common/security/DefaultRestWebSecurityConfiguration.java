@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2022 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.summerclouds.common.security;
 
 import java.util.ArrayList;
@@ -33,85 +48,84 @@ import org.summerclouds.common.security.realm.RealmManager;
 
 @Configuration
 @EnableWebSecurity
-@ConditionalOnProperty(name="org.summerclouds.security.default.enabled",havingValue="true")
+@ConditionalOnProperty(name = "org.summerclouds.security.default.enabled", havingValue = "true")
 public class DefaultRestWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(realmManager());
-        auth.authenticationProvider(new DaoJwtAuthenticationProvider(auth.getDefaultUserDetailsService()));
+        auth.authenticationProvider(
+                new DaoJwtAuthenticationProvider(auth.getDefaultUserDetailsService()));
     }
 
-	@Bean
-	RealmManager realmManager() {
-		return new RealmManager();
-	}
+    @Bean
+    RealmManager realmManager() {
+        return new RealmManager();
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().mvcMatchers("/hello");
+        //        web.ignoring().mvcMatchers("/hello");
     }
-    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-		ArrayList<GrantedAuthority> guestAuth = new ArrayList<>();
-		String permStr = MSpring.getValue("spring.security.guest.permissions");
-    	if (permStr != null)
-    		guestAuth.add(new PermSet(permStr));
-		String authStr = MSpring.getValue("spring.security.guest.authorities");
-		if (authStr != null)
-			for (String a : authStr.split(","))
-				if (MString.isSetTrim(a))
-					guestAuth.add(new SimpleGrantedAuthority(a));
-		if (guestAuth.size() == 0) // add dummy auth
-			guestAuth.add(new SimpleGrantedAuthority(UUID.randomUUID().toString()));
-		
-    	http.csrf().disable()
-        .formLogin().disable()
-        .logout().disable()
-//        .anonymous().principal("guest").authorities(guestAuth)
-//        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeRequests()
-        .antMatchers("/**").hasAuthority("ace_web:${method}:${url}")
-        .accessDecisionManager(accessDecisionManager())
-        .and()
-        .apply(new JwtConfigurer<>())
-        .and()
-          .httpBasic()
-          ;    
+        ArrayList<GrantedAuthority> guestAuth = new ArrayList<>();
+        String permStr = MSpring.getValue("spring.security.guest.permissions");
+        if (permStr != null) guestAuth.add(new PermSet(permStr));
+        String authStr = MSpring.getValue("spring.security.guest.authorities");
+        if (authStr != null)
+            for (String a : authStr.split(","))
+                if (MString.isSetTrim(a)) guestAuth.add(new SimpleGrantedAuthority(a));
+        if (guestAuth.size() == 0) // add dummy auth
+        guestAuth.add(new SimpleGrantedAuthority(UUID.randomUUID().toString()));
 
+        http.csrf()
+                .disable()
+                .formLogin()
+                .disable()
+                .logout()
+                .disable()
+                //        .anonymous().principal("guest").authorities(guestAuth)
+                //        .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/**")
+                .hasAuthority("ace_web:${method}:${url}")
+                .accessDecisionManager(accessDecisionManager())
+                .and()
+                .apply(new JwtConfigurer<>())
+                .and()
+                .httpBasic();
     }
 
-//		http.authorizeRequests()
-//	      .anyRequest().authenticated()
-//	      .and().httpBasic();
+    //		http.authorizeRequests()
+    //	      .anyRequest().authenticated()
+    //	      .and().httpBasic();
 
-//	    .anyRequest()
-//	    .authenticated()
-//	    .accessDecisionManager(accessDecisionManager());
+    //	    .anyRequest()
+    //	    .authenticated()
+    //	    .accessDecisionManager(accessDecisionManager());
 
-	public void addCorsMappings(CorsRegistry registry) {
-		registry
-		.addMapping("/**")
-		.allowedMethods("GET", "POST", "PUT", "DELETE")
-		.allowedOrigins("*")
-		.allowedHeaders("*");
-	}
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedOrigins("*")
+                .allowedHeaders("*");
+    }
 
-	@Bean
-	public AccessDecisionManager accessDecisionManager() {
-		
-	    List<AccessDecisionVoter<? extends Object>> decisionVoters 
-	      = Arrays.asList(
-  		    new ResourceAceVoter(),
-	        new WebExpressionVoter(),
-	        new RoleAceVoter(), // instead of RoleVoter()
-	        new AuthenticatedVoter()
-	        );
-	    return new AffirmativeBased(decisionVoters);
-	}
-	    
+    @Bean
+    public AccessDecisionManager accessDecisionManager() {
+
+        List<AccessDecisionVoter<? extends Object>> decisionVoters =
+                Arrays.asList(
+                        new ResourceAceVoter(),
+                        new WebExpressionVoter(),
+                        new RoleAceVoter(), // instead of RoleVoter()
+                        new AuthenticatedVoter());
+        return new AffirmativeBased(decisionVoters);
+    }
 }

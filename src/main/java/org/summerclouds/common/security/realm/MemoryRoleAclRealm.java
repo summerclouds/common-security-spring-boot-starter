@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2022 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.summerclouds.common.security.realm;
 
 import java.util.HashMap;
@@ -6,23 +21,22 @@ import org.summerclouds.common.security.permissions.PermSet;
 
 public class MemoryRoleAclRealm implements RoleAclRealm {
 
-	private HashMap<String, PermSet> acls = new HashMap<>();
-	
-	@Override
-	public PermSet getAclforRole(String rolename) {
-		PermSet acl = acls.get(rolename);
-		return acl;
-	}
+    private HashMap<String, PermSet> acls = new HashMap<>();
 
-	public MemoryRoleAclRealm add(String rolename, String ... aces) {
-		PermSet acl = new PermSet(aces);
-		acls.put(rolename, acl);
-		return this;
-	}
+    @Override
+    public PermSet getAclforRole(String rolename) {
+        PermSet acl = acls.get(rolename);
+        return acl;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return !acls.isEmpty();
-	}
+    public MemoryRoleAclRealm add(String rolename, String... aces) {
+        PermSet acl = new PermSet(aces);
+        acls.put(rolename, acl);
+        return this;
+    }
 
+    @Override
+    public boolean isEnabled() {
+        return !acls.isEmpty();
+    }
 }
