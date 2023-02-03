@@ -44,7 +44,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
             username = getUsernameFromToken();
 
-        } catch (Throwable t) {
+        } catch (Exception t) {
             log.d("parse jwt token failed", token);
         }
         setAuthenticated(false);

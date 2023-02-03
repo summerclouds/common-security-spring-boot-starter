@@ -57,7 +57,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                             return user;
                         }
                     }
-                } catch (Throwable t) {
+                } catch (Exception t) {
                     log().w("can't load user from realm {1}", realm.getKey(), t);
                 }
             }
@@ -79,7 +79,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                         return acl;
                     }
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 log().w("can't load acl from realm {1}", realm.getKey(), t);
             }
         }
@@ -100,7 +100,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                         return role;
                     }
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 log().w("can't load acl from realm {1}", realm.getKey(), t);
             }
         }
@@ -121,7 +121,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                         return acl;
                     }
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 log().w("can't load acl from realm {1}", realm.getKey(), t);
             }
         }
@@ -143,7 +143,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                         return roles;
                     }
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 log().w("can't load roles from realm {1}", realm.getKey(), t);
             }
         }
@@ -161,7 +161,7 @@ public class RealmManager extends MLog implements UserDetailsService {
                     UserData d = ((UserDataRealm) realm).getUserData(username);
                     data.putAll(d.getUserData());
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 log().w("can't load user data from realm {1}", realm.getKey(), t);
             }
         }

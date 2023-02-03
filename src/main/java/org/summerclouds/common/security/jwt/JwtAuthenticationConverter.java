@@ -15,7 +15,7 @@
  */
 package org.summerclouds.common.security.jwt;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
